@@ -1,0 +1,6 @@
+{
+  "project_id": "preprod6Zlqd54IUdWzdIG85rBE4BCnK0M78nsI",
+  "payment_key_public": "35984fe27b32c8be119d4c7a14d2f607b28da0b587dc12bffd4ec5a03c7efdf3",
+  "webhook_url": "http://localhost:8080/tx-confirmed",
+  "monitoring_address": "addr_test1qpp8qndr4p5cjndgufqctlpklk7c9asf9jz6z76lcmjjyyavuam5ced7vsutn86dghwa46yz8cum5hdc42dv7fedaz6sgkx26d"
+}

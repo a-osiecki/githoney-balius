@@ -1,0 +1,60 @@
+# Balius Daemon Configuration for Test Project
+# This is the proper way to run Balius workers in production
+
+[rpc]
+listen_address = "0.0.0.0:3001"
+
+[logging]
+max_level = "debug"
+include_tokio = false
+
+[ledger]
+endpoint_url = "https://cardano-preprod.utxorpc-m1.demeter.run"
+headers."dmtr-api-key" = "utxorpc15k5p90jx4d78zql0mna"
+
+[chainsync]
+endpoint_url = "https://cardano-preprod.utxorpc-m1.demeter.run"
+headers."dmtr-api-key" = "utxorpc15k5p90jx4d78zql0mna"
+
+# HTTP client configuration
+[http]
+type = "reqwest"
+timeout = 30  # seconds
+
+# Key-Value store configuration
+[kv]
+type = "memory"  # or "redb" for persistent storage
+
+# Logger configuration (for worker logs)
+[logger]
+type = "tracing"  # Options: "silent", "tracing", "file"
+
+# Sign module configuration (in-memory signer)
+[signing]
+type = "memory"
+
+# Pre-configured signing key from pilot.sk
+[[signing.keys]]
+worker = "test"
+name = "payment-key"
+algorithm = "ed25519"
+private_key = "70d0db4d66d9f8f823482d1491252a67603e050a03c6cb57a3f47e14a2e381413029bae71e1e031220fc3bdd2763e90dc6d3ab67a55840666e8b36dd9e503dfa"
+
+
+# Submit transaction configuration via UTxORPC
+[submit]
+type = "u5c"
+endpoint_url = "https://cardano-preprod.utxorpc-m1.demeter.run"
+
+[submit.headers]
+dmtr-api-key = "utxorpc15k5p90jx4d78zql0mna"
+
+# Persistent storage configuration
+[store]
+path = "baliusd.db"
+
+# Define your worker
+[[workers]]
+name = "test"
+module = "test-c.wasm"
+config = "config.json"
