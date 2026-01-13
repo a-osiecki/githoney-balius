@@ -1,0 +1,69 @@
+# =========================
+# Rust / Cargo (all crates)
+# =========================
+
+# Build artifacts (any crate)
+**/target/
+
+# Rust backup files
+**/*.rs.bk
+
+# =========================
+# Cargo.lock
+# =========================
+# Do NOT ignore Cargo.lock
+# (each crate keeps its own lockfile)
+
+# =========================
+# Generated code / tx3
+# =========================
+
+# Codegen outputs
+**/generated/
+**/codegen/
+**/*_gen.rs
+
+# tx3-specific outputs
+**/tx3_out/
+**/tx3_generated/
+
+# =========================
+# Environment / secrets
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Logs
+# =========================
+**/*.log
+
+# =========================
+# IDEs / Editors
+# =========================
+.vscode/
+.idea/
+**/*.swp
+**/*.swo
+**/*.swn
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Coverage / profiling
+# =========================
+**/coverage/
+**/*.profraw
+**/*.profdata
+
+# =========================
+# Temp
+# =========================
+**/tmp/
+**/temp/
+

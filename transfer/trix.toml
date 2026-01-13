@@ -1,0 +1,13 @@
+[protocol]
+name = "transfer"
+scope = ""
+version = "0.0.0"
+description = ""
+main = "main.tx3"
+
+[ledger]
+family = "cardano"
+
+[[codegen]]
+plugin = "rust-client"
+output_dir = "./gen/"
