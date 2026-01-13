@@ -304,41 +304,63 @@ struct TransferParams {
 struct TransferResponse {
     cbor_hex: String,
 }
+// fn use_protocol(
+//     _config: Config<BlockfrostConfig>,
+//     params: Params<TransferParams>,
+// ) -> WorkerResult<Json<TransferResponse>> {
+//     let protocol_url: url::Url = url::Url::parse("http://127.0.0.1:8080/transfer".into()).unwrap();
+
+//     // Serialize params
+//     let body: Option<Vec<u8>> = serde_json::to_vec(&params.0)?.into();
+
+//     let mut request = HttpRequest::post(protocol_url).header("Content-Type", "application/json");
+//     request.body = body;
+
+//     let response = request.send();
+
+//     // Read response body
+//     match response {
+//         Err(e) => {
+//             return Err(balius_sdk::Error::Internal(format!(
+//                 "Protocol request error: {:?}",
+//                 e
+//             )))
+//         }
+//         Ok(resp) => {
+//             let parsed: Result<TransferResponse, HttpError> = resp.json();
+//             match parsed {
+//                 Err(e) => {
+//                     return Err(balius_sdk::Error::Internal(format!(
+//                         "Protocol response parse error: {:?}",
+//                         e
+//                     )));
+//                 }
+//                 Ok(parsed) => Ok(Json(parsed)),
+//             }
+//         }
+//     }
+// }
+
 fn use_protocol(
     _config: Config<BlockfrostConfig>,
     params: Params<TransferParams>,
 ) -> WorkerResult<Json<TransferResponse>> {
-    let protocol_url: url::Url = url::Url::parse("http://127.0.0.1:8080/transfer".into()).unwrap();
+    let protocol_url = url::Url::parse("http://127.0.0.1:8080/transfer").unwrap();
 
-    // Serialize params
-    let body: Option<Vec<u8>> = serde_json::to_vec(&params.0)?.into();
+    let body = Some(serde_json::to_vec(&params.0)?);
 
     let mut request = HttpRequest::post(protocol_url).header("Content-Type", "application/json");
     request.body = body;
 
-    let response = request.send();
+    let response = request
+        .send()
+        .map_err(|e| balius_sdk::Error::Internal(format!("Protocol request error: {:?}", e)))?;
 
-    // Read response body
-    match response {
-        Err(e) => {
-            return Err(balius_sdk::Error::Internal(format!(
-                "Protocol request error: {:?}",
-                e
-            )))
-        }
-        Ok(resp) => {
-            let parsed: Result<TransferResponse, HttpError> = resp.json();
-            match parsed {
-                Err(e) => {
-                    return Err(balius_sdk::Error::Internal(format!(
-                        "Protocol response parse error: {:?}",
-                        e
-                    )));
-                }
-                Ok(parsed) => Ok(Json(parsed)),
-            }
-        }
-    }
+    let parsed: TransferResponse = response.json().map_err(|e| {
+        balius_sdk::Error::Internal(format!("Protocol response parse error: {:?}", e))
+    })?;
+
+    Ok(Json(parsed))
 }
 
 #[balius_sdk::main]
