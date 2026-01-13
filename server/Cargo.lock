@@ -138,6 +138,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "dotenvy"
+version = "0.15.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1aaf95b3e5c8f23aa320147307562d361db0ae0d51242340f558153b4eb2439b"
+
+[[package]]
 name = "dyn-clone"
 version = "1.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -568,6 +574,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "535d180e0ecab6268a3e718bb9fd44db66bbbc256257165fc699dadf70d16fe7"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "protocol"
+version = "0.0.0"
+dependencies = [
+ "once_cell",
+ "serde",
+ "serde_json",
+ "tx3-sdk",
 ]
 
 [[package]]
@@ -1094,16 +1110,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "transfer"
-version = "0.0.0"
-dependencies = [
- "once_cell",
- "serde",
- "serde_json",
- "tx3-sdk",
-]
-
-[[package]]
 name = "try-lock"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1114,11 +1120,12 @@ name = "tx-builder-server"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "dotenvy",
  "once_cell",
+ "protocol",
  "serde",
  "serde_json",
  "tokio",
- "transfer",
 ]
 
 [[package]]
