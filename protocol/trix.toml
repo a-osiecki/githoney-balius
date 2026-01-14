@@ -1,5 +1,5 @@
 [protocol]
-name = "transfer"
+name = "protocol"
 scope = ""
 version = "0.0.0"
 description = ""

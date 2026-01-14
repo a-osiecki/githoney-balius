@@ -1,17 +1,17 @@
 use std::collections::HashMap;
 
 use axum::{
-    routing::{get, post},
+    routing::{post},
     Json, Router,
 };
 use serde::Serialize;
 
-use transfer::{Client, ClientOptions, TransferParams};
+use protocol::{Client, ClientOptions, CreateWithLovelaceParams};
 
 use once_cell::sync::Lazy;
 
 #[derive(Serialize)]
-struct TransferResponse {
+struct CreateBountyResponse {
     cbor_hex: String,
 }
 
@@ -33,18 +33,18 @@ fn build_client() -> Client {
 static PROTOCOL: Lazy<Client> = Lazy::new(|| build_client());
 
 pub fn router() -> Router {
-    Router::new().route("/transfer", post(transfer))
+    Router::new().route("/protocol", post(create_bounty))
 }
 
-async fn transfer(Json(req): Json<TransferParams>) -> Json<Result<TransferResponse, String>> {
-    println!("Received transfer request: {:?}", req);
+async fn create_bounty(Json(req): Json<CreateWithLovelaceParams>) -> Json<Result<CreateBountyResponse, String>> {
+    println!("Received create bounty request: {:?}", req);
 
-    let cbor = match PROTOCOL.transfer_tx(req).await {
+    let cbor = match PROTOCOL.create_with_lovelace_tx(req).await {
         Ok(tx) => tx.tx,
         Err(e) => {
-            panic!("Error creating transfer transaction: {:?}", e);
+            panic!("Error creating bounty: {:?}", e);
         }
     };
     println!("Generated CBOR: {}", cbor);
-    Json(Ok(TransferResponse { cbor_hex: cbor }))
+    Json(Ok(CreateBountyResponse { cbor_hex: cbor }))
 }
