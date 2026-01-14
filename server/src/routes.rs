@@ -16,17 +16,16 @@ struct CreateBountyResponse {
 }
 
 fn build_client() -> Client {
-    let trp_endpoint = std::env::var("TRP_ENDPOINT").unwrap();
-    let dmtr_api_key: String = std::env::var("DMTR_API_KEY").unwrap();
-    let headers: &[(&str, &str)] = &[("dmtr-api-key", dmtr_api_key.as_str())];
+    const TRP_ENDPOINT: &str = "https://cardano-preprod.trp-m1.demeter.run";
+    const HEADERS: &[(&str, &str)] = &[("dmtr-api-key", "trp1plzft88zdrf2gktm8ad")];
     // Build the TRP client with custom endpoint and headers
-    let mut headers_hm: HashMap<String, String> = HashMap::new();
-    for (key, value) in headers {
-        headers_hm.insert(key.to_string(), value.to_string());
+    let mut headers: HashMap<String, String> = HashMap::new();
+    for (key, value) in HEADERS {
+        headers.insert(key.to_string(), value.to_string());
     }
     let client_options = ClientOptions {
-        endpoint: trp_endpoint,
-        headers: Some(headers_hm),
+        endpoint: TRP_ENDPOINT.to_string(),
+        headers: Some(headers),
     };
     Client::new(client_options)
 }
