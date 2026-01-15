@@ -35,7 +35,7 @@ type = "memory"
 
 # Pre-configured signing key from pilot.sk
 [[signing.keys]]
-worker = "test"
+worker = "githoney-worker"
 name = "payment-key"
 algorithm = "ed25519"
 private_key = "70d0db4d66d9f8f823482d1491252a67603e050a03c6cb57a3f47e14a2e381413029bae71e1e031220fc3bdd2763e90dc6d3ab67a55840666e8b36dd9e503dfa"
@@ -55,6 +55,6 @@ path = "baliusd.db"
 
 # Define your worker
 [[workers]]
-name = "test"
-module = "test-c.wasm"
+name = "githoney-worker"
+module = "githoney_worker-c.wasm"
 config = "config.json"
