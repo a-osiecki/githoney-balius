@@ -1,13 +1,13 @@
 # =========================
 # Rust / Cargo (all crates)
 # =========================
+**/baliusd.toml
 
 # Build artifacts (any crate)
 **/target/
 
 # Rust backup files
 **/*.rs.bk
-
 # =========================
 # Cargo.lock
 # =========================

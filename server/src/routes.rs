@@ -1,19 +1,9 @@
-use std::collections::HashMap;
-
-use axum::{
-    routing::{post},
-    Json, Router,
-};
-use serde::Serialize;
-
-use protocol::{Client, ClientOptions, CreateWithLovelaceParams};
-
+use axum::{routing::post, Json, Router};
 use once_cell::sync::Lazy;
+use std::collections::HashMap;
+use tx3_sdk::trp::TxEnvelope;
 
-#[derive(Serialize)]
-struct CreateBountyResponse {
-    cbor_hex: String,
-}
+use protocol::{Client, ClientOptions, CreateWithLovelaceParams, DeployParams};
 
 fn build_client() -> Client {
     let trp_endpoint = std::env::var("TRP_ENDPOINT").unwrap();
@@ -34,18 +24,41 @@ fn build_client() -> Client {
 static PROTOCOL: Lazy<Client> = Lazy::new(|| build_client());
 
 pub fn router() -> Router {
-    Router::new().route("/protocol", post(create_bounty))
+    Router::new()
+        .route("/create-bounty", post(create_bounty))
+        .route("/deploy-settings", post(deploy_settings))
 }
 
-async fn create_bounty(Json(req): Json<CreateWithLovelaceParams>) -> Json<Result<CreateBountyResponse, String>> {
+async fn create_bounty(
+    Json(req): Json<CreateWithLovelaceParams>,
+) -> Json<Result<TxEnvelope, String>> {
     println!("Received create bounty request: {:?}", req);
 
-    let cbor = match PROTOCOL.create_with_lovelace_tx(req).await {
-        Ok(tx) => tx.tx,
-        Err(e) => {
-            panic!("Error creating bounty: {:?}", e);
+    match PROTOCOL.create_with_lovelace_tx(req).await {
+        Ok(tx) => {
+            println!("Generated CBOR: {}", tx.tx);
+            Json(Ok(tx))
         }
-    };
-    println!("Generated CBOR: {}", cbor);
-    Json(Ok(CreateBountyResponse { cbor_hex: cbor }))
+        Err(e) => {
+            println!("Error creating bounty: {:?}", e);
+            Json(Err(format!("Error creating bounty: {:?}", e)))
+        }
+    }
+}
+
+async fn deploy_settings(
+    Json(req): Json<DeployParams>,
+) -> Json<Result<TxEnvelope, String>> {
+    println!("Received deploy settings request: {:?}", req);
+
+    match PROTOCOL.deploy_tx(req).await {
+        Ok(tx) => {
+            println!("Generated CBOR: {}", tx.tx);
+            Json(Ok(tx))
+        }
+        Err(e) => {
+            println!("Error deploying settings: {:?}", e);
+            Json(Err(format!("Error deploying settings: {:?}", e)))
+        }
+    }
 }
