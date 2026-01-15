@@ -87,19 +87,19 @@ type BadgesDatum {
 
 tx deployBadge(
     description: Bytes,
-    descriptionValue: Bytes,
-    ftBadgeAmount: Int,
-    ftBadgeName: Bytes,
+    description_value: Bytes,
+    ft_badge_amount: Int,
+    ft_badge_name: Bytes,
     logo: Bytes,
-    logoValue: Bytes,
-    mVersion: Int,
-    mintingPolicyId: Bytes,
+    logo_value: Bytes,
+    m_version: Int,
+    minting_policy_id: Bytes,
     name: Bytes,
-    nameValue: Bytes,
-    policyScript: Bytes,
-    policyScriptVersion: Int,
-    refNftAssetName: Bytes,
-    utxoRef: UtxoRef,
+    name_value: Bytes,
+    policy_script: Bytes,
+    policy_script_version: Int,
+    ref_nft_asset_name: Bytes,
+    utxo_ref: UtxoRef,
 ) {
     collateral {
         from: GitHoneyAddr,
@@ -107,30 +107,30 @@ tx deployBadge(
     }
 
     input githoney_wallet {
-        ref: utxoRef,
+        ref: utxo_ref,
     }
 
     mint {
-        amount: AnyAsset(mintingPolicyId, refNftAssetName, 1) + AnyAsset(mintingPolicyId, ftBadgeName, ftBadgeAmount),
+        amount: AnyAsset(minting_policy_id, ref_nft_asset_name, 1) + AnyAsset(minting_policy_id, ft_badge_name, ft_badge_amount),
         redeemer: (),
     }
 
     output badge_utxo {
         to: ScriptBadge,
-        amount: min_utxo(badge_utxo) + AnyAsset(mintingPolicyId, refNftAssetName, 1),
+        amount: min_utxo(badge_utxo) + AnyAsset(minting_policy_id, ref_nft_asset_name, 1),
         datum: BadgesDatum {
             metadata: {
-                name: nameValue,
-                logo: logoValue,
-                description: descriptionValue,
+                name: name_value,
+                logo: logo_value,
+                description: description_value,
             },
-            version: mVersion,
+            version: m_version,
         },
     }
 
     output ft_output {
         to: FTAddress,
-        amount: AnyAsset(mintingPolicyId, ftBadgeName, ftBadgeAmount) + min_utxo(ft_output),
+        amount: AnyAsset(minting_policy_id, ft_badge_name, ft_badge_amount) + min_utxo(ft_output),
     }
 
     output change {
@@ -139,8 +139,8 @@ tx deployBadge(
     }
 
     cardano::plutus_witness {
-        version: policyScriptVersion,
-        script: policyScript,
+        version: policy_script_version,
+        script: policy_script,
     }
 
     metadata {
@@ -151,18 +151,18 @@ tx deployBadge(
 // UPDATE BADGE METADATA
 
 tx updateBadge(
-    badgesScript: Bytes,
-    badgesScriptVersion: Int,
+    badges_script: Bytes,
+    badges_script_version: Int,
     description: Bytes,
-    descriptionValue: Bytes,
+    description_value: Bytes,
     logo: Bytes,
-    logoValue: Bytes,
+    logo_value: Bytes,
     mVersion: Int,
     name: Bytes,
     nameValue: Bytes,
-    settingsRef: UtxoRef,
-    utxoRef: UtxoRef,
-    utxoToCollect: UtxoRef,
+    settings_ref: UtxoRef,
+    utxo_ref: UtxoRef,
+    utxo_to_collect: UtxoRef,
 ) {
     collateral {
         from: GitHoneyAddr,
@@ -170,15 +170,15 @@ tx updateBadge(
     }
 
     input githoney_wallet {
-        ref: utxoRef,
+        ref: utxo_ref,
     }
 
     reference settings_utxo {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     input current {
-        ref: utxoToCollect,
+        ref: utxo_to_collect,
         redeemer: (),
     }
 
@@ -188,8 +188,8 @@ tx updateBadge(
         datum: BadgesDatum {
             metadata: {
                 name: nameValue,
-                logo: logoValue,
-                description: descriptionValue,
+                logo: logo_value,
+                description: description_value,
             },
             version: mVersion,
         },
@@ -206,8 +206,8 @@ tx updateBadge(
     }
 
     cardano::plutus_witness {
-        version: badgesScriptVersion,
-        script: badgesScript,
+        version: badges_script_version,
+        script: badges_script,
     }
 
     metadata {
@@ -218,12 +218,12 @@ tx updateBadge(
 // PAY BADGES TO
 
 tx payBadgesTo(
-    badgeName: Bytes,
-    badgePolicy: Bytes
+    badge_name: Bytes,
+    badge_policy: Bytes
 ) {
     input badges {
         from: FTAddress,
-        min_amount: AnyAsset(badgePolicy, badgeName, 1),
+        min_amount: AnyAsset(badge_policy, badge_name, 1),
     }
 
     input gas {
@@ -233,23 +233,22 @@ tx payBadgesTo(
 
     output payment {
         to: PayAddress,
-        amount: AnyAsset(badgePolicy, badgeName, 1) + min_utxo(payment),
+        amount: AnyAsset(badge_policy, badge_name, 1) + min_utxo(payment),
     }
 
     output change {
         to: FTAddress,
-        amount: gas + badges - fees - min_utxo(payment) - AnyAsset(badgePolicy, badgeName, 1),
+        amount: gas + badges - fees - min_utxo(payment) - AnyAsset(badge_policy, badge_name, 1),
     }
 }
 
 // COLLECT UTXOS FROM BADGES
 
 tx collectUtxos(
-    badgesScript: Bytes,
-    badgesScriptVersion: Int,
-    settingsRef: UtxoRef,
-    utxoRef: UtxoRef,
-    utxoToCollect: UtxoRef,
+    badges_script: Bytes,
+    badges_script_version: Int,
+    settings_ref: UtxoRef,
+    utxo_to_collect: UtxoRef,
 ) {
     collateral {
         from: GitHoneyAddr,
@@ -257,11 +256,11 @@ tx collectUtxos(
     }
 
     reference settings_utxo {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     input current {
-        ref: utxoToCollect,
+        ref: utxo_to_collect,
         redeemer: (),
     }
 
@@ -280,8 +279,8 @@ tx collectUtxos(
     }
 
     cardano::plutus_witness {
-        version: badgesScriptVersion,
-        script: badgesScript,
+        version: badges_script_version,
+        script: badges_script,
     }
 }
 
@@ -289,21 +288,21 @@ tx collectUtxos(
 // DEPLOY SETTINGS
 
 tx deploy(
-    bountyCreationFee: Int,
-    bountyRewardFee: Int,
-    githoneyPaymentCredential: Bytes,
-    githoneyScript: Bytes,
-    githoneyStakingCredential: Bytes,
-    scriptVersion: Int,
-    settingsMintingPolicy: Bytes,
-    settingsMintingVersion: Int,
-    settingsPolicyId: Bytes,
-    settingsTokenName: Bytes,
-    utxoRef: UtxoRef,
+    bounty_creating_fee: Int,
+    bounty_rewards_fee: Int,
+    githoney_payment_credential: Bytes,
+    githoney_script: Bytes,
+    githoney_staking_credential: Bytes,
+    script_version: Int,
+    settings_minting_policy: Bytes,
+    settings_minting_version: Int,
+    settings_policy_id: Bytes,
+    settings_token_name: Bytes,
+    utxo_ref: UtxoRef,
 ) {
 
     input githoney_wallet {
-        ref: utxoRef,
+        ref: utxo_ref,
     }
 
     collateral {
@@ -312,31 +311,31 @@ tx deploy(
     }
 
     mint {
-        amount: AnyAsset(settingsPolicyId, settingsTokenName, 1),
+        amount: AnyAsset(settings_policy_id, settings_token_name, 1),
         redeemer: (),
     }
 
     cardano::publish settings_utxo {
         to: Script,
-        amount: Ada(2000000) + AnyAsset(settingsPolicyId, settingsTokenName, 1),
+        amount: Ada(2000000) + AnyAsset(settings_policy_id, settings_token_name, 1),
         datum: SettingsDatum {
             githoney_address: CardanoAddress {
                 payment_credential: CardanoCredential::VerificationKey {
-                    VerificationKey: githoneyPaymentCredential,
+                    VerificationKey: githoney_payment_credential,
                 },
                 staking_credential: OptionAddressCardanoCredential::Some {
                     stakeCredetial: StakeCredWrapper::Inline {
                         VerificationKey: CardanoCredential::VerificationKey {
-                            VerificationKey: githoneyStakingCredential,
+                            VerificationKey: githoney_staking_credential,
                         },
                     },
                 },
             },
-            bounty_creation_fee: bountyCreationFee,
-            bounty_reward_fee: bountyRewardFee,
+            bounty_creation_fee: bounty_creating_fee,
+            bounty_reward_fee: bounty_rewards_fee,
         },
-        version: scriptVersion,
-        script: githoneyScript,
+        version: script_version,
+        script: githoney_script,
     }
 
     output change {
@@ -345,21 +344,21 @@ tx deploy(
     }
 
     cardano::plutus_witness {
-        version: settingsMintingVersion,
-        script: settingsMintingPolicy,
+        version: settings_minting_version,
+        script: settings_minting_policy,
     }
 }
 
 // UPDATE SETTINGS
 
 tx update(
-    bountyCreationFee: Int,
-    bountyRewardFee: Int,
-    githoneyScript: Bytes,
-    scriptVersion: Int,
-    settingsRef: UtxoRef,
-    settingsValidatorScript: Bytes,
-    settingsValidatorVersion: Int,
+    bounty_creating_fee: Int,
+    bounty_rewards_fee: Int,
+    githoney_script: Bytes,
+    script_version: Int,
+    settings_ref: UtxoRef,
+    settings_validator_script: Bytes,
+    settings_validator_version: Int,
 ) {
     collateral {
         from: GitHoneyAddr,
@@ -367,7 +366,7 @@ tx update(
     }
 
     input current {
-        ref: settingsRef,
+        ref: settings_ref,
         datum_is: SettingsDatum,
         redeemer: SettingsRedeemers::UpdateSettings {},
     }
@@ -382,11 +381,11 @@ tx update(
         amount: current,
         datum: SettingsDatum {
             githoney_address: current.githoney_address,
-            bounty_creation_fee: bountyCreationFee,
-            bounty_reward_fee: bountyRewardFee,
+            bounty_creation_fee: bounty_creating_fee,
+            bounty_reward_fee: bounty_rewards_fee,
         },
-        version: scriptVersion,
-        script: githoneyScript,
+        version: script_version,
+        script: githoney_script,
     }
 
     output change {
@@ -399,24 +398,23 @@ tx update(
     }
 
     cardano::plutus_witness {
-        version: settingsValidatorVersion,
-        script: settingsValidatorScript,
+        version: settings_validator_version,
+        script: settings_validator_script,
     }
 }
 
 // CLOSE SETTINGS
 
 tx close(
-    githoneyPaymentCredential: Bytes,
-    githoneyStakingCredential: Bytes,
-    remainingAda: Int,
-    settingsMintingPolicy: Bytes,
-    settingsMintingVersion: Int,
-    settingsPolicyId: Bytes,
-    settingsRef: UtxoRef,
-    settingsTokenName: Bytes,
-    settingsValidatorScript: Bytes,
-    settingsValidatorVersion: Int,
+    githoney_payment_credential: Bytes,
+    githoney_staking_credential: Bytes,
+    settings_minting_policy: Bytes,
+    settings_minting_version: Int,
+    settings_policy_id: Bytes,
+    settings_ref: UtxoRef,
+    settings_token_name: Bytes,
+    settings_validator_script: Bytes,
+    settings_validator_version: Int,
 ) {
     collateral {
         from: GitHoneyAddr,
@@ -429,19 +427,19 @@ tx close(
     }
 
     input current {
-        ref: settingsRef,
+        ref: settings_ref,
         datum_is: SettingsDatum,
         redeemer: SettingsRedeemers::CloseSettings {},
     }
 
     mint {
-        amount: AnyAsset(settingsPolicyId, settingsTokenName, -1),
+        amount: AnyAsset(settings_policy_id, settings_token_name, -1),
         redeemer: (),
     }
 
     output change {
         to: GitHoneyAddr,
-        amount: githoney_wallet - fees + Ada(remainingAda),
+        amount: current + githoney_wallet - fees - AnyAsset(settings_policy_id, settings_token_name, 1),
     }
 
     signers {
@@ -449,13 +447,13 @@ tx close(
     }
 
     cardano::plutus_witness {
-        version: settingsValidatorVersion,
-        script: settingsValidatorScript,
+        version: settings_validator_version,
+        script: settings_validator_script,
     }
 
     cardano::plutus_witness {
-        version: settingsMintingVersion,
-        script: settingsMintingPolicy,
+        version: settings_minting_version,
+        script: settings_minting_policy,
     }
 }
 
@@ -464,26 +462,26 @@ tx close(
 // // CREATE BOUNTY
 
 tx createWithToken(
-    adminPaymentCredential: CardanoCredential,
+    admin_payment_key: Bytes,
     // Since the settingsutxo datum cannot be accessed,
     // they are passed as parameters.
-    bountyCreationFee: Int,
-    bountyId: Bytes,
-    bountyRewardFee: Int,
-    manteinerAddress: CardanoAddress,
-    minAda: Int,
+    bounty_creation_fee: Int,
+    bounty_id: Bytes,
+    bounty_rewards_fee: Int,
+    manteiner_payment_credential: Bytes,
+    manteiner_stake_credential: Bytes,
     //NOTE - Since you cannot iterate over lists, we use a fixed asset.
-    mintingPolicyId: Bytes,
-    rewardAmount: Int,
-    rewardAssetName: Bytes,
-    rewardPolicyId: Bytes,
-    settingsRef: UtxoRef,
+    minting_policy_id: Bytes,
+    reward_amount: Int,
+    reward_asset_name: Bytes,
+    reward_policy_id: Bytes,
+    settings_ref: UtxoRef,
     since: Int,
-    timeLimit: Int,
+    time_limit: Int,
     until: Int,
 ) {
     reference contract {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     collateral {
@@ -493,43 +491,56 @@ tx createWithToken(
 
     input maintainer_input {
         from: Maintainer,
-        min_amount: min_utxo(bounty_utxo) + min_utxo(maintainer_output) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount) + Ada(bountyCreationFee) + fees,
+        min_amount: min_utxo(maintainer_output) + AnyAsset(reward_policy_id, reward_asset_name, reward_amount) + Ada(bounty_creation_fee + 3000000) + fees,
     }
 
     mint {
-        amount: AnyAsset(mintingPolicyId, bountyId, 1),
+        amount: AnyAsset(minting_policy_id, bounty_id, 1),
         redeemer: (),
     }
 
     output bounty_utxo {
         to: Script,
-        amount: Ada(minAda) + AnyAsset(mintingPolicyId, bountyId, 1) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
+        amount: min_utxo(bounty_utxo) + AnyAsset(minting_policy_id, bounty_id, 1) + AnyAsset(reward_policy_id, reward_asset_name, reward_amount),
         datum: GithoneyDatum {
-            admin_payment_credential: adminPaymentCredential,
-            maintainer_address: manteinerAddress,
+            admin_payment_credential:CardanoCredential::VerificationKey {
+                VerificationKey: admin_payment_key,
+            },
+            maintainer_address: CardanoAddress {
+                payment_credential: CardanoCredential::VerificationKey {
+                    VerificationKey: manteiner_payment_credential,
+                },
+                staking_credential: OptionAddressCardanoCredential::Some {
+                    stakeCredetial: StakeCredWrapper::Inline {
+                        VerificationKey: CardanoCredential::VerificationKey {
+                            VerificationKey: manteiner_stake_credential,
+                        },
+                    },
+                },
+            },
             contributor_address: OptionAddress::None {},
-            bounty_reward_fee: bountyRewardFee,
-            deadline: timeLimit,
+            bounty_reward_fee: bounty_rewards_fee,
+            deadline: time_limit,
             merged: false,
             initial_value: {
-                rewardPolicyId: {
-                    rewardAssetName: rewardAmount,
+                reward_policy_id: {
+                    reward_asset_name: reward_amount,
                 },
-                "": {
-                    "": minAda,
-                },
+               "":{
+                "": 3000000,
+               },
             },
         },
     }
 
     output githoney_wallet{
         to: GitHoneyAddr,
-        amount: Ada(bountyCreationFee),
+        amount: Ada(bounty_creation_fee),
     }
 
     output maintainer_output {
         to: Maintainer,
-        amount: maintainer_input - Ada(bountyCreationFee) - fees - AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount) - Ada(minAda),
+        amount: maintainer_input - Ada(bounty_creation_fee + 3000000) - fees - AnyAsset(reward_policy_id, reward_asset_name, reward_amount),
     }
 
     validity {
@@ -539,22 +550,21 @@ tx createWithToken(
 }
 
 tx createWithLovelace(
-    adminPaymentCredential: Bytes,
-    bountyCreationFee: Int,
-    bountyId: Bytes,
-    bountyRewardFee: Int,
-    maintainerPaymentCredential: Bytes,
-    maintainerStakeCredential: Bytes,
-    minAda: Int,
-    mintingPolicyId: Bytes,
-    rewardAmount: Int,
-    settingsRef: UtxoRef,
+    admin_payment_key: Bytes,
+    bounty_creation_fee: Int,
+    bounty_id: Bytes,
+    bounty_rewards_fee: Int,
+    manteiner_payment_credential: Bytes,
+    manteiner_stake_credential: Bytes,
+    minting_policy_id: Bytes,
+    reward_amount: Int,
+    settings_ref: UtxoRef,
     since: Int,
-    timeLimit: Int,
+    time_limit: Int,
     until: Int,
 ) {
     reference contract {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     collateral {
@@ -564,40 +574,40 @@ tx createWithLovelace(
 
     input maintainer_input {
         from: Maintainer,
-        min_amount: min_utxo(bounty_utxo) + min_utxo(maintainer_output) + Ada(bountyCreationFee + rewardAmount) + fees,
+        min_amount: Ada(3000000) + min_utxo(maintainer_output) + Ada(bounty_creation_fee + reward_amount) + fees,
     }
 
     mint {
-        amount: AnyAsset(mintingPolicyId, bountyId, 1),
+        amount: AnyAsset(minting_policy_id, bounty_id, 1),
         redeemer: (),
     }
 
     output bounty_utxo {
         to: Script,
-        amount: Ada(minAda + rewardAmount) + AnyAsset(mintingPolicyId, bountyId, 1),
+        amount: Ada(3000000) + Ada(reward_amount) + AnyAsset(minting_policy_id, bounty_id, 1),
         datum: GithoneyDatum {
             admin_payment_credential: CardanoCredential::VerificationKey {
-                VerificationKey: adminPaymentCredential,
+                VerificationKey: admin_payment_key,
             },
             maintainer_address: CardanoAddress {
                 payment_credential: CardanoCredential::VerificationKey {
-                    VerificationKey: maintainerPaymentCredential,
+                    VerificationKey: manteiner_payment_credential,
                 },
                 staking_credential: OptionAddressCardanoCredential::Some {
                     stakeCredetial: StakeCredWrapper::Inline {
                         VerificationKey: CardanoCredential::VerificationKey {
-                            VerificationKey: maintainerStakeCredential,
+                            VerificationKey: manteiner_stake_credential,
                         },
                     },
                 },
             },
             contributor_address: OptionAddress::None {},
-            bounty_reward_fee: bountyRewardFee,
-            deadline: timeLimit,
+            bounty_reward_fee: bounty_rewards_fee,
+            deadline: time_limit,
             merged: false,
             initial_value: {
                 "": {
-                    "": minAda + rewardAmount,
+                    "": 3000000 + reward_amount,
                 },
             },
         },
@@ -605,12 +615,12 @@ tx createWithLovelace(
 
     output githoney_wallet{
         to: GitHoneyAddr,
-        amount: Ada(bountyCreationFee),
+        amount: Ada(bounty_creation_fee),
     }
 
     output maintainer_output {
         to: Maintainer,
-        amount: maintainer_input - Ada(bountyCreationFee + rewardAmount + minAda) - fees,
+        amount: maintainer_input - Ada(bounty_creation_fee + reward_amount + 3000000) - fees,
     }
 
     validity {
@@ -622,17 +632,16 @@ tx createWithLovelace(
 // ADD REWARDS
 
 tx add(
-    bountyRef: UtxoRef,
-    minAda: Int,
-    rewardAmount: Int,
-    rewardAssetName: Bytes,
-    rewardPolicyId: Bytes,
-    settingsRef: UtxoRef,
+    bounty_ref: UtxoRef,
+    reward_amount: Int,
+    reward_asset_name: Bytes,
+    reward_policy_id: Bytes,
+    settings_ref: UtxoRef,
     since: Int,
     until: Int,
 ) {
     reference contract {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     collateral {
@@ -642,18 +651,18 @@ tx add(
 
     input sponsor_input {
         from: Sponsor,
-        min_amount: min_utxo(sponsor_output) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount) + fees,
+        min_amount: min_utxo(sponsor_output) + AnyAsset(reward_policy_id, reward_asset_name, reward_amount) + fees,
     }
 
     input current {
-        ref: bountyRef,
+        ref: bounty_ref,
         datum_is: GithoneyDatum,
         redeemer: GithoneyContractRedeemers::AddRewards {},
     }
 
     output bounty_utxo {
         to: Script,
-        amount: current + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
+        amount: current + AnyAsset(reward_policy_id, reward_asset_name, reward_amount),
         datum: GithoneyDatum {
             admin_payment_credential: current.admin_payment_credential,
             maintainer_address: current.maintainer_address,
@@ -667,7 +676,7 @@ tx add(
 
     output sponsor_output {
         to: Sponsor,
-        amount: sponsor_input - fees - AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
+        amount: sponsor_input - fees - AnyAsset(reward_policy_id, reward_asset_name, reward_amount),
     }
 
     validity {
@@ -679,16 +688,15 @@ tx add(
 // ASSIGN CONTRIBUTOR
 
 tx assign(
-    bountyRef: UtxoRef,
-    contributorPaymentCredential: Bytes,
-    contributorStakeCredential: Bytes,
-    minAda: Int,
-    settingsRef: UtxoRef,
+    bounty_ref: UtxoRef,
+    contributor_payment_credential: Bytes,
+    contributor_stake_credential: Bytes,
+    settings_ref: UtxoRef,
     since: Int,
     until: Int,
 ) {
     reference contract {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     collateral {
@@ -698,30 +706,30 @@ tx assign(
 
     input contributor_input {
         from: Contributor,
-        min_amount: min_utxo(contributor_output) + Ada(minAda) + fees,
+        min_amount: min_utxo(contributor_output) + min_utxo(bounty_utxo) + fees,
     }
 
     input current {
-        ref: bountyRef,
+        ref: bounty_ref,
         datum_is: GithoneyDatum,
         redeemer: GithoneyContractRedeemers::Assign {},
     }
 
     output bounty_utxo {
         to: Script,
-        amount: current + Ada(minAda), // 2 * minAda
+        amount: current + Ada(3000000), // 2 * minAda
         datum: GithoneyDatum {
             admin_payment_credential: current.admin_payment_credential,
             maintainer_address: current.maintainer_address,
             contributor_address: OptionAddress::Some {
                 address: CardanoAddress {
                     payment_credential: CardanoCredential::VerificationKey {
-                        VerificationKey: contributorPaymentCredential,
+                        VerificationKey: contributor_payment_credential,
                     },
                     staking_credential: OptionAddressCardanoCredential::Some {
                         stakeCredetial: StakeCredWrapper::Inline {
                             VerificationKey: CardanoCredential::VerificationKey {
-                                VerificationKey: contributorStakeCredential,
+                                VerificationKey: contributor_stake_credential,
                             },
                         },
                     },
@@ -736,7 +744,7 @@ tx assign(
 
     output contributor_output {
         to: Contributor,
-        amount: contributor_input - fees - Ada(minAda),
+        amount: contributor_input - fees - Ada(3000000),
     }
 
     validity {
@@ -748,20 +756,19 @@ tx assign(
 // CLOSE BOUNTY
 
 tx closeBeforeContributor(
-    bountyId: Bytes,
-    bountyRef: UtxoRef,
-    minAda: Int,
-    mintingPolicyId: Bytes,
-    rewardAmount: Int,
-    rewardAssetName: Bytes,
-    rewardPolicyId: Bytes,
-    settingsRef: UtxoRef,
+    bounty_id: Bytes,
+    bounty_ref: UtxoRef,
+    minting_policy_id: Bytes,
+    reward_amount: Int,
+    reward_asset_name: Bytes,
+    reward_policy_id: Bytes,
+    settings_ref: UtxoRef,
     since: Int,
-    timeLimit: Int,
+    time_limit: Int,
     until: Int,
 ) {
     reference contract {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     collateral {
@@ -775,19 +782,19 @@ tx closeBeforeContributor(
     }
 
     input current {
-        ref: bountyRef,
+        ref: bounty_ref,
         datum_is: GithoneyDatum,
         redeemer: GithoneyContractRedeemers::Close {},
     }
 
     mint {
-        amount: AnyAsset(mintingPolicyId, bountyId, -1),
+        amount: AnyAsset(minting_policy_id, bounty_id, -1),
         redeemer: (),
     }
 
     output maintainer_output {
         to: Maintainer,
-        amount: Ada(minAda) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
+        amount: Ada(3000000) + AnyAsset(reward_policy_id, reward_asset_name, reward_amount),
     }
 
     output admin_output {
@@ -806,23 +813,22 @@ tx closeBeforeContributor(
 }
 
 tx closeBeforeContributorWithReward(
-    bountyId: Bytes,
-    bountyRef: UtxoRef,
-    minAda: Int,
-    mintingPolicyId: Bytes,
-    rewardAmount: Int,
-    rewardAssetName: Bytes,
-    rewardPolicyId: Bytes,
-    settingsRef: UtxoRef,
+    bounty_id: Bytes,
+    bounty_ref: UtxoRef,
+    minting_policy_id: Bytes,
+    reward_amount: Int,
+    reward_asset_name: Bytes,
+    reward_policy_id: Bytes,
+    settings_ref: UtxoRef,
     since: Int,
-    refundingsAmount: Int,
-    refundingsAssetName: Bytes,
-    refundingsPolicyId: Bytes,
-    timeLimit: Int,
+    refundings_amount: Int,
+    refundings_asset_name: Bytes,
+    refundings_policy_id: Bytes,
+    time_limit: Int,
     until: Int,
 ) {
     reference contract {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     collateral {
@@ -836,19 +842,19 @@ tx closeBeforeContributorWithReward(
     }
 
     input current {
-        ref: bountyRef,
+        ref: bounty_ref,
         datum_is: GithoneyDatum,
         redeemer: GithoneyContractRedeemers::Close {},
     }
 
     mint {
-        amount: AnyAsset(mintingPolicyId, bountyId, -1),
+        amount: AnyAsset(minting_policy_id, bounty_id, -1),
         redeemer: (),
     }
 
     output maintainer_output {
         to: Maintainer,
-        amount: Ada(minAda) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
+        amount: Ada(3000000) + AnyAsset(reward_policy_id, reward_asset_name, reward_amount),
     }
 
     output admin_output {
@@ -858,7 +864,7 @@ tx closeBeforeContributorWithReward(
 
     output sponsor_output {
         to: Sponsor,
-        amount: AnyAsset(refundingsPolicyId, refundingsAssetName, refundingsAmount) + min_utxo(sponsor_output),
+        amount: AnyAsset(refundings_policy_id, refundings_asset_name, refundings_amount) + min_utxo(sponsor_output),
     }
 
     validity {
@@ -872,21 +878,20 @@ tx closeBeforeContributorWithReward(
 }
 
 tx closeAfterContributor(
-    bountyId: Bytes,
-    bountyRef: UtxoRef,
-    minAda: Int,
-    mintingPolicyId: Bytes,
-    rewardAmount: Int,
-    rewardAssetName: Bytes,
-    rewardPolicyId: Bytes,
-    settingsRef: UtxoRef,
+    bounty_id: Bytes,
+    bounty_ref: UtxoRef,
+    minting_policy_id: Bytes,
+    reward_amount: Int,
+    reward_asset_name: Bytes,
+    reward_policy_id: Bytes,
+    settings_ref: UtxoRef,
     since: Int,
-    timeLimit: Int,
+    time_limit: Int,
     until: Int,
 
 ) {
     reference contract {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     collateral {
@@ -900,24 +905,24 @@ tx closeAfterContributor(
     }
 
     input current {
-        ref: bountyRef,
+        ref: bounty_ref,
         datum_is: GithoneyDatum,
         redeemer: GithoneyContractRedeemers::Close {},
     }
 
     mint {
-        amount: AnyAsset(mintingPolicyId, bountyId, -1),
+        amount: AnyAsset(minting_policy_id, bounty_id, -1),
         redeemer: (),
     }
 
     output maintainer_output {
         to: Maintainer,
-        amount: Ada(minAda) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
+        amount: Ada(3000000) + AnyAsset(reward_policy_id, reward_asset_name, reward_amount),
     }
 
     output contributor_output {
         to: Contributor,
-        amount: Ada(minAda),
+        amount: Ada(3000000),
     }
 
     output admin_output {
@@ -936,23 +941,22 @@ tx closeAfterContributor(
 }
 
 tx closeAfterContributorWithReward(
-    bountyId: Bytes,
-    bountyRef: UtxoRef,
-    minAda: Int,
-    mintingPolicyId: Bytes,
-    rewardAmount: Int,
-    rewardAssetName: Bytes,
-    rewardPolicyId: Bytes,
-    settingsRef: UtxoRef,
+    bounty_id: Bytes,
+    bounty_ref: UtxoRef,
+    minting_policy_id: Bytes,
+    reward_amount: Int,
+    reward_asset_name: Bytes,
+    reward_policy_id: Bytes,
+    settings_ref: UtxoRef,
     since: Int,
-    refundingsAmount: Int,
-    refundingsAssetName: Bytes,
-    refundingsPolicyId: Bytes,
-    timeLimit: Int,
+    refundings_amount: Int,
+    refundings_asset_name: Bytes,
+    refundings_policy_id: Bytes,
+    time_limit: Int,
     until: Int,
 ) {
     reference contract {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     collateral {
@@ -966,24 +970,24 @@ tx closeAfterContributorWithReward(
     }
 
     input current {
-        ref: bountyRef,
+        ref: bounty_ref,
         datum_is: GithoneyDatum,
         redeemer: GithoneyContractRedeemers::Close {},
     }
 
     mint {
-        amount: AnyAsset(mintingPolicyId, bountyId, -1),
+        amount: AnyAsset(minting_policy_id, bounty_id, -1),
         redeemer: (),
     }
 
     output maintainer_output {
         to: Maintainer,
-        amount: Ada(minAda) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
+        amount: Ada(3000000) + AnyAsset(reward_policy_id, reward_asset_name, reward_amount),
     }
 
     output contributor_output {
         to: Contributor,
-        amount: Ada(minAda),
+        amount: Ada(3000000),
     }
 
     output admin_output {
@@ -993,7 +997,7 @@ tx closeAfterContributorWithReward(
 
     output sponsor_output {
         to: Sponsor,
-        amount: AnyAsset(refundingsPolicyId, refundingsAssetName, refundingsAmount) + min_utxo(sponsor_output),
+        amount: AnyAsset(refundings_policy_id, refundings_asset_name, refundings_amount) + min_utxo(sponsor_output),
     }
 
     validity {
@@ -1009,18 +1013,16 @@ tx closeAfterContributorWithReward(
 // MERGE BOUNTY
 
 tx merge(
-    bountyRef: UtxoRef,
-    githoneyFee: Int,
-    minAda: Int,
-    rewardAssetName: Bytes,
-    rewardPolicyId: Bytes,
-    scriptFee: Int,
-    settingsRef: UtxoRef,
+    bounty_ref: UtxoRef,
+    githoney_fee: Int,
+    reward_asset_name: Bytes,
+    reward_policy_id: Bytes,
+    settings_ref: UtxoRef,
     since: Int,
     until: Int,
 ) {
     reference contract {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     collateral {
@@ -1034,7 +1036,7 @@ tx merge(
     }
 
     input current {
-        ref: bountyRef,
+        ref: bounty_ref,
         datum_is: GithoneyDatum,
         redeemer: GithoneyContractRedeemers::Merge {},
     }
@@ -1042,7 +1044,7 @@ tx merge(
 
     output bounty_utxo {
         to: Script,
-        amount: current - AnyAsset(rewardPolicyId, rewardAssetName, githoneyFee) - Ada(minAda),
+        amount: current - AnyAsset(reward_policy_id, reward_asset_name, githoney_fee) - Ada(3000000),
         datum: GithoneyDatum {
             admin_payment_credential: current.admin_payment_credential,
             maintainer_address: current.maintainer_address,
@@ -1056,12 +1058,12 @@ tx merge(
 
     output githoney_output {
         to: GitHoneyAddr,
-        amount: AnyAsset(rewardPolicyId, rewardAssetName, githoneyFee) + min_utxo(githoney_output),
+        amount: AnyAsset(reward_policy_id, reward_asset_name, githoney_fee) + min_utxo(githoney_output),
     }
 
     output maintainer_output {
         to: Maintainer,
-        amount: Ada(minAda),
+        amount: Ada(3000000),
     }
 
     output admin_output {
@@ -1083,16 +1085,15 @@ tx merge(
 // CLAIM BOUNTY
 
 tx claim(
-    bountyId: Bytes,
-    bountyRef: UtxoRef,
-    minAda: Int,
-    mintingPolicyId: Bytes,
-    settingsRef: UtxoRef,
+    bounty_id: Bytes,
+    bounty_ref: UtxoRef,
+    minting_policy_id: Bytes,
+    settings_ref: UtxoRef,
     since: Int,
     until: Int,
 ) {
     reference contract {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     collateral {
@@ -1106,19 +1107,19 @@ tx claim(
     }
 
     input current {
-        ref: bountyRef,
+        ref: bounty_ref,
         datum_is: GithoneyDatum,
         redeemer: GithoneyContractRedeemers::Claim {},
     }
 
     mint {
-        amount: AnyAsset(mintingPolicyId, bountyId, -1),
+        amount: AnyAsset(minting_policy_id, bounty_id, -1),
         redeemer: (),
     }
 
     output contributor_output {
         to: Contributor,
-        amount: contributor_input + current - AnyAsset(mintingPolicyId, bountyId, 1) - fees,
+        amount: contributor_input + current - AnyAsset(minting_policy_id, bounty_id, 1) - fees,
     }
 
     validity {
