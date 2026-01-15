@@ -6,12 +6,6 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct CreateWithLovelaceParams {
-    // from config
-    // pub admin_payment_key: String,
-    // pub githoneyaddr: String,
-    // pub script: String,
-    // pub settings_ref: String,
-    // pub minting_policy_id: String,
     pub bounty_creation_fee: String,
     pub bounty_id: String,
     pub bounty_rewards_fee: String,

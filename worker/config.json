@@ -6,9 +6,9 @@
   "tx_builder_base_url": "http://127.0.0.1:8080",
 
   "admin_payment_cred": "42704da3a869894da8e24185fc36fdbd82f6092c85a17b5fc6e52213",
-  "githoney_addr": "addr_test1qpp8qndr4p5cjndgufqctlpklk7c9asf9jz6z76lcmjjyyavuam5ced7vsutn86dghwa46yz8cum5hdc42dv7fedaz6sgkx26d",
-  "githoney_payment_cred": "42704da3a869894da8e24185fc36fdbd82f6092c85a17b5fc6e52213",
-  "githoney_staking_cred": "ace7774c65be6438b99f4d45dddae8823e39ba5db8aa9acf272de8b5",
+  "githoney_addr": "addr_test1qqzq2j55hh2ml3h08skfgg04lhh7n7epv2ycn90ntr6ys7zrxalmeg3lyamyahkfwdv6fylkyxj0stj8xpplusva7w7s40czuq",
+  "githoney_payment_cred": "04054a94bdd5bfc6ef3c2c9421f5fdefe9fb2162898995f358f44878",
+  "githoney_staking_cred": "43377fbca23f27764edec97359a493f621a4f82e473043fe419df3bd",
   "validator_ref": "9edc3087527514724b297475f84a8ab316faab1950ce1882715cf4bf88b20b64#0",
   "githoney_script_address": "addr_test1wr5nj776ygd7d7vwcw3f9fknj4axx0wzy67y3qu8dqtscys7w9q65",
   "minting_policy_id": "e9397bda221be6f98ec3a292a6d3957a633dc226bc48838768170c12",
