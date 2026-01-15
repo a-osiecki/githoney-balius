@@ -486,6 +486,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "protocol"
+version = "0.0.0"
+dependencies = [
+ "once_cell",
+ "serde",
+ "serde_json",
+ "tx3-sdk",
+]
+
+[[package]]
 name = "quinn"
 version = "0.11.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -981,16 +991,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "db97caf9d906fbde555dd62fa95ddba9eecfd14cb388e4f491a66d74cd5fb79a"
 dependencies = [
  "once_cell",
-]
-
-[[package]]
-name = "transfer"
-version = "0.0.0"
-dependencies = [
- "once_cell",
- "serde",
- "serde_json",
- "tx3-sdk",
 ]
 
 [[package]]
