@@ -3,6 +3,7 @@ use tokio::net::TcpListener;
 use dotenvy;
 
 mod routes;
+mod evaluate_tx;
 
 #[tokio::main]
 async fn main() {

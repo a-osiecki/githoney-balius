@@ -13,4 +13,5 @@ dotenvy = "0.15"
 
 protocol = { path = "../protocol/gen" }
 tx3-sdk = "0.9.2"
+reqwest = "0.13.1"
 

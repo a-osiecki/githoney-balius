@@ -5,6 +5,8 @@ use tx3_sdk::trp::TxEnvelope;
 
 use protocol::{Client, ClientOptions, CreateWithLovelaceParams, DeployParams};
 
+use crate::evaluate_tx;
+
 fn build_client() -> Client {
     let trp_endpoint = std::env::var("TRP_ENDPOINT").unwrap();
     let dmtr_api_key: String = std::env::var("DMTR_API_KEY").unwrap();
@@ -37,7 +39,30 @@ async fn create_bounty(
     match PROTOCOL.create_with_lovelace_tx(req).await {
         Ok(tx) => {
             println!("Generated CBOR: {}", tx.tx);
-            Json(Ok(tx))
+            let evaluate_url = std::env::var("OGMIOS_ENDPOINT").unwrap();
+            let ogmios_api_key = std::env::var("DMTR_API_KEY_OGMIOS").unwrap();
+            let client = reqwest::Client::new();
+
+            match evaluate_tx::call_evaluate_transaction(
+                client,
+                &evaluate_url,
+                &ogmios_api_key,
+                &tx.tx,
+            )
+            .await
+            {
+                Ok(response) => {
+                    println!("Transaction evaluated successfully: {}", response);
+                    if response.contains("Some of the scripts failed") {
+                        return Json(Err(response));
+                    }
+                    Json(Ok(tx))
+                }
+                Err(e) => {
+                    println!("Error evaluating transaction: {:?}", e);
+                    Json(Err(format!("Error evaluating transaction: {:?}", e)))
+                }
+            }
         }
         Err(e) => {
             println!("Error creating bounty: {:?}", e);
@@ -46,9 +71,7 @@ async fn create_bounty(
     }
 }
 
-async fn deploy_settings(
-    Json(req): Json<DeployParams>,
-) -> Json<Result<TxEnvelope, String>> {
+async fn deploy_settings(Json(req): Json<DeployParams>) -> Json<Result<TxEnvelope, String>> {
     println!("Received deploy settings request: {:?}", req);
 
     match PROTOCOL.deploy_tx(req).await {
