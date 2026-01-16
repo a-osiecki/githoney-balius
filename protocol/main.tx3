@@ -472,8 +472,8 @@ tx deploy(
 // }
 
 
-// // // BOUNTIES
-// // // CREATE BOUNTY
+// BOUNTIES
+// CREATE BOUNTY
 
 // tx createWithToken(
 //     adminPaymentCredential: CardanoCredential,
@@ -631,62 +631,62 @@ tx createWithLovelace(
     }
 }
 
-// // ADD REWARDS
+// ADD REWARDS
 
-// tx add(
-//     bountyRef: UtxoRef,
-//     minAda: Int,
-//     rewardAmount: Int,
-//     rewardAssetName: Bytes,
-//     rewardPolicyId: Bytes,
-//     settingsRef: UtxoRef,
-//     since: Int,
-//     until: Int,
-// ) {
-//     reference contract {
-//         ref: settingsRef,
-//     }
+tx add(
+    bountyRef: UtxoRef,
+    minAda: Int,
+    rewardAmount: Int,
+    rewardAssetName: Bytes,
+    rewardPolicyId: Bytes,
+    settingsRef: UtxoRef,
+    since: Int,
+    until: Int,
+) {
+    reference contract {
+        ref: settingsRef,
+    }
 
-//     collateral {
-//         from: Sponsor,
-//         min_amount: Ada(5000000),
-//     }
+    collateral {
+        from: Sponsor,
+        min_amount: Ada(5000000),
+    }
 
-//     input sponsor_input {
-//         from: Sponsor,
-//         min_amount: min_utxo(sponsor_output) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount) + fees,
-//     }
+    input sponsor_input {
+        from: Sponsor,
+        min_amount: min_utxo(sponsor_output) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount) + fees,
+    }
 
-//     input current {
-//         ref: bountyRef,
-//         datum_is: GithoneyDatum,
-//         redeemer: GithoneyContractRedeemers::AddRewards {},
-//     }
+    input current {
+        ref: bountyRef,
+        datum_is: GithoneyDatum,
+        redeemer: GithoneyContractRedeemers::AddRewards {},
+    }
 
-//     output bounty_utxo {
-//         to: Script,
-//         amount: current + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
-//         datum: GithoneyDatum {
-//             admin_payment_credential: current.admin_payment_credential,
-//             maintainer_address: current.maintainer_address,
-//             contributor_address: current.contributor_address,
-//             bounty_reward_fee: current.bounty_reward_fee,
-//             deadline: current.deadline,
-//             merged: current.merged,
-//             initial_value: current.initial_value,
-//         },
-//     }
+    output bounty_utxo {
+        to: Script,
+        amount: current + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
+        datum: GithoneyDatum {
+            admin_payment_credential: current.admin_payment_credential,
+            maintainer_address: current.maintainer_address,
+            contributor_address: current.contributor_address,
+            bounty_reward_fee: current.bounty_reward_fee,
+            deadline: current.deadline,
+            merged: current.merged,
+            initial_value: current.initial_value,
+        },
+    }
 
-//     output sponsor_output {
-//         to: Sponsor,
-//         amount: sponsor_input - fees - AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
-//     }
+    output sponsor_output {
+        to: Sponsor,
+        amount: sponsor_input - fees - AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
+    }
 
-//     validity {
-//         until_slot: until,
-//         since_slot: since,
-//     }
-// }
+    validity {
+        until_slot: until,
+        since_slot: since,
+    }
+}
 
 // // ASSIGN CONTRIBUTOR
 

@@ -1,6 +1,7 @@
 use reqwest::Client;
+use tx3_sdk::trp::TxEnvelope;
 
-pub async fn call_evaluate_transaction(
+async fn ogmios_evaluate(
     client: Client,
     url: &str,
     ogmios_api_key: &str,
@@ -11,7 +12,6 @@ pub async fn call_evaluate_transaction(
         "method": "evaluateTransaction",
         "params": { "transaction": { "cbor": base16_cbor } }
     });
-    println!("Sending evaluateTransaction request to {} with api key {}...", url, ogmios_api_key);
 
     let resp_text = client
         .post(url)
@@ -26,3 +26,22 @@ pub async fn call_evaluate_transaction(
     Ok(resp_text)
 }
 
+pub async fn evaluate_tx(tx: TxEnvelope) -> Result<TxEnvelope, String> {
+    let evaluate_url = std::env::var("OGMIOS_ENDPOINT").unwrap();
+    let ogmios_api_key = std::env::var("DMTR_API_KEY_OGMIOS").unwrap();
+    let client = reqwest::Client::new();
+
+    match ogmios_evaluate(client, &evaluate_url, &ogmios_api_key, &tx.tx).await {
+        Ok(response) => {
+            println!("Transaction evaluated successfully: {}", response);
+            if response.contains("Some of the scripts failed") {
+                return Err(response);
+            }
+            Ok(tx)
+        }
+        Err(e) => {
+            println!("Error evaluating transaction: {:?}", e);
+            Err(format!("Error evaluating transaction: {:?}", e))
+        }
+    }
+}

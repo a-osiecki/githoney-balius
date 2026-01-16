@@ -3,7 +3,7 @@ use once_cell::sync::Lazy;
 use std::collections::HashMap;
 use tx3_sdk::trp::TxEnvelope;
 
-use protocol::{Client, ClientOptions, CreateWithLovelaceParams, DeployParams};
+use protocol::{AddParams, Client, ClientOptions, CreateWithLovelaceParams, DeployParams};
 
 use crate::evaluate_tx;
 
@@ -27,8 +27,9 @@ static PROTOCOL: Lazy<Client> = Lazy::new(|| build_client());
 
 pub fn router() -> Router {
     Router::new()
-        .route("/create-bounty", post(create_bounty))
         .route("/deploy-settings", post(deploy_settings))
+        .route("/create-bounty", post(create_bounty))
+        .route("/add-funds", post(add_funds))
 }
 
 async fn create_bounty(
@@ -39,34 +40,28 @@ async fn create_bounty(
     match PROTOCOL.create_with_lovelace_tx(req).await {
         Ok(tx) => {
             println!("Generated CBOR: {}", tx.tx);
-            let evaluate_url = std::env::var("OGMIOS_ENDPOINT").unwrap();
-            let ogmios_api_key = std::env::var("DMTR_API_KEY_OGMIOS").unwrap();
-            let client = reqwest::Client::new();
-
-            match evaluate_tx::call_evaluate_transaction(
-                client,
-                &evaluate_url,
-                &ogmios_api_key,
-                &tx.tx,
-            )
-            .await
-            {
-                Ok(response) => {
-                    println!("Transaction evaluated successfully: {}", response);
-                    if response.contains("Some of the scripts failed") {
-                        return Json(Err(response));
-                    }
-                    Json(Ok(tx))
-                }
-                Err(e) => {
-                    println!("Error evaluating transaction: {:?}", e);
-                    Json(Err(format!("Error evaluating transaction: {:?}", e)))
-                }
-            }
+            let evaluated_tx_or_err = evaluate_tx::evaluate_tx(tx).await;
+            Json(evaluated_tx_or_err)
         }
         Err(e) => {
             println!("Error creating bounty: {:?}", e);
             Json(Err(format!("Error creating bounty: {:?}", e)))
+        }
+    }
+}
+
+async fn add_funds(Json(req): Json<AddParams>) -> Json<Result<TxEnvelope, String>> {
+    println!("Received add funds request: {:?}", req);
+
+    match PROTOCOL.add_tx(req).await {
+        Ok(tx) => {
+            println!("Generated CBOR: {}", tx.tx);
+            let evaluated_tx_or_err = evaluate_tx::evaluate_tx(tx).await;
+            Json(evaluated_tx_or_err)
+        }
+        Err(e) => {
+            println!("Error adding funds: {:?}", e);
+            Json(Err(format!("Error adding funds: {:?}", e)))
         }
     }
 }
