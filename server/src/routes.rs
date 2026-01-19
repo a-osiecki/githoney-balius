@@ -72,7 +72,8 @@ async fn deploy_settings(Json(req): Json<DeployParams>) -> Json<Result<TxEnvelop
     match PROTOCOL.deploy_tx(req).await {
         Ok(tx) => {
             println!("Generated CBOR: {}", tx.tx);
-            Json(Ok(tx))
+            let evaluated_tx_or_err = evaluate_tx::evaluate_tx(tx).await;
+            Json(evaluated_tx_or_err)
         }
         Err(e) => {
             println!("Error deploying settings: {:?}", e);
