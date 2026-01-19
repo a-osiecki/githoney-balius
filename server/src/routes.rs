@@ -1,9 +1,12 @@
 use axum::{routing::post, Json, Router};
 use once_cell::sync::Lazy;
 use std::collections::HashMap;
-use tx3_sdk::trp::TxEnvelope;
+use tx3_sdk::trp::{Error, TxEnvelope};
 
-use protocol::{AddParams, Client, ClientOptions, CreateWithLovelaceParams, DeployParams};
+use protocol::{
+    AddParams, Client, ClientOptions, CloseBeforeContributorParams, CreateWithLovelaceParams,
+    DeployParams,
+};
 
 use crate::evaluate_tx;
 
@@ -30,6 +33,23 @@ pub fn router() -> Router {
         .route("/deploy-settings", post(deploy_settings))
         .route("/create-bounty", post(create_bounty))
         .route("/add-funds", post(add_funds))
+        .route("/close-before-contributor", post(close_before_contributor))
+}
+
+async fn handle_tx_result(
+    tx_result: Result<TxEnvelope, Error>,
+) -> Json<Result<TxEnvelope, String>> {
+    match tx_result {
+        Ok(tx) => {
+            println!("Generated CBOR: {}", tx.tx);
+            let evaluated_tx_or_err = evaluate_tx::evaluate_tx(tx).await;
+            Json(evaluated_tx_or_err)
+        }
+        Err(e) => {
+            println!("Error building transaction: {:?}", e);
+            Json(Err(format!("Error building transaction: {:?}", e)))
+        }
+    }
 }
 
 async fn create_bounty(
@@ -37,47 +57,25 @@ async fn create_bounty(
 ) -> Json<Result<TxEnvelope, String>> {
     println!("Received create bounty request: {:?}", req);
 
-    match PROTOCOL.create_with_lovelace_tx(req).await {
-        Ok(tx) => {
-            println!("Generated CBOR: {}", tx.tx);
-            let evaluated_tx_or_err = evaluate_tx::evaluate_tx(tx).await;
-            Json(evaluated_tx_or_err)
-        }
-        Err(e) => {
-            println!("Error creating bounty: {:?}", e);
-            Json(Err(format!("Error creating bounty: {:?}", e)))
-        }
-    }
+    handle_tx_result(PROTOCOL.create_with_lovelace_tx(req).await).await
 }
 
 async fn add_funds(Json(req): Json<AddParams>) -> Json<Result<TxEnvelope, String>> {
     println!("Received add funds request: {:?}", req);
 
-    match PROTOCOL.add_tx(req).await {
-        Ok(tx) => {
-            println!("Generated CBOR: {}", tx.tx);
-            let evaluated_tx_or_err = evaluate_tx::evaluate_tx(tx).await;
-            Json(evaluated_tx_or_err)
-        }
-        Err(e) => {
-            println!("Error adding funds: {:?}", e);
-            Json(Err(format!("Error adding funds: {:?}", e)))
-        }
-    }
+    handle_tx_result(PROTOCOL.add_tx(req).await).await
 }
 
 async fn deploy_settings(Json(req): Json<DeployParams>) -> Json<Result<TxEnvelope, String>> {
     println!("Received deploy settings request: {:?}", req);
 
-    match PROTOCOL.deploy_tx(req).await {
-        Ok(tx) => {
-            println!("Generated CBOR: {}", tx.tx);
-            let evaluated_tx_or_err = evaluate_tx::evaluate_tx(tx).await;
-            Json(evaluated_tx_or_err)
-        }
-        Err(e) => {
-            println!("Error deploying settings: {:?}", e);
-            Json(Err(format!("Error deploying settings: {:?}", e)))
-        }
-    }
+    handle_tx_result(PROTOCOL.deploy_tx(req).await).await
+}
+
+async fn close_before_contributor(
+    Json(req): Json<CloseBeforeContributorParams>,
+) -> Json<Result<TxEnvelope, String>> {
+    println!("Received close before contributor request: {:?}", req);
+
+    handle_tx_result(PROTOCOL.close_before_contributor_tx(req).await).await
 }

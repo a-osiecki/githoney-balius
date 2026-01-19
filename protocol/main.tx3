@@ -758,63 +758,63 @@ tx add(
 
 // // CLOSE BOUNTY
 
-// tx closeBeforeContributor(
-//     bountyId: Bytes,
-//     bountyRef: UtxoRef,
-//     minAda: Int,
-//     mintingPolicyId: Bytes,
-//     rewardAmount: Int,
-//     rewardAssetName: Bytes,
-//     rewardPolicyId: Bytes,
-//     settingsRef: UtxoRef,
-//     since: Int,
-//     timeLimit: Int,
-//     until: Int,
-// ) {
-//     reference contract {
-//         ref: settingsRef,
-//     }
+tx closeBeforeContributor(
+    bounty_id: Bytes,
+    bounty_ref: UtxoRef,
+    min_ada: Int,
+    minting_policy_id: Bytes,
+    reward_amount: Int,
+    reward_asset_name: Bytes,
+    reward_policy_id: Bytes,
+    settings_ref: UtxoRef,
+    since: Int,
+    time_limit: Int,
+    until: Int,
+) {
+    reference contract {
+        ref: settings_ref,
+    }
 
-//     collateral {
-//         from: Admin,
-//         min_amount: Ada(5000000),
-//     }
+    collateral {
+        from: Admin,
+        min_amount: Ada(5000000),
+    }
 
-//     input admin_input {
-//         from: Admin,
-//         min_amount: min_utxo(admin_output) + min_utxo(maintainer_output) + fees,
-//     }
+    input admin_input {
+        from: Admin,
+        min_amount: min_utxo(admin_output) + min_utxo(maintainer_output) + fees,
+    }
 
-//     input current {
-//         ref: bountyRef,
-//         datum_is: GithoneyDatum,
-//         redeemer: GithoneyContractRedeemers::Close {},
-//     }
+    input current {
+        ref: bounty_ref,
+        datum_is: GithoneyDatum,
+        redeemer: GithoneyContractRedeemers::Close {},
+    }
 
-//     mint {
-//         amount: AnyAsset(mintingPolicyId, bountyId, -1),
-//         redeemer: (),
-//     }
+    mint {
+        amount: AnyAsset(minting_policy_id, bounty_id, -1),
+        redeemer: (),
+    }
 
-//     output maintainer_output {
-//         to: Maintainer,
-//         amount: Ada(minAda) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
-//     }
+    output maintainer_output {
+        to: Maintainer,
+        amount: Ada(min_ada) + AnyAsset(reward_policy_id, reward_asset_name, reward_amount),
+    }
 
-//     output admin_output {
-//         to: Admin,
-//         amount: admin_input - fees,
-//     }
+    output admin_output {
+        to: Admin,
+        amount: admin_input - fees,
+    }
 
-//     validity {
-//         until_slot: until,
-//         since_slot: since,
-//     }
+    validity {
+        until_slot: until,
+        since_slot: since,
+    }
 
-//     signers {
-//         Admin,
-//     }
-// }
+    signers {
+        Admin,
+    }
+}
 
 // tx closeBeforeContributorWithReward(
 //     bountyId: Bytes,
