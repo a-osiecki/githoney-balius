@@ -45,7 +45,7 @@ pub fn create_bounty(
         script: &config.githoney_script_address,
         admin_payment_key: &config.admin_payment_cred,
         settings_ref: &config.validator_ref,
-        minting_policy_id: &config.minting_policy_id,
+        minting_policy_id: &config.githoney_script_hash,
     })?);
 
     do_tx_building_request(protocol_url, body)
@@ -55,12 +55,6 @@ pub fn create_bounty(
 pub struct DeployParams {
     pub creation_fee: String,
     pub reward_fee: String,
-    pub script: String,
-    pub script_version: String,
-    pub settings_minting_policy: String,
-    pub settings_minting_version: String,
-    pub settings_policy_id: String,
-    pub settings_token_name: String,
     pub utxo_ref: String,
 }
 
@@ -68,10 +62,16 @@ pub struct DeployParams {
 struct DeployParamsExt<'a> {
     #[serde(flatten)]
     _base: &'a DeployParams,
-    githoney_payment_credential: &'a String,
-    githoney_script: &'a String,
-    githoney_staking_credential: &'a String,
     githoneyaddr: &'a String,
+    githoney_payment_credential: &'a String,
+    githoney_staking_credential: &'a String,
+    githoney_script: &'a String,
+    script: &'a String,
+    script_version: &'a String,
+    settings_minting_policy: &'a String,
+    settings_minting_version: &'a String,
+    settings_policy_id: &'a String,
+    settings_token_name: &'a String,
 }
 pub fn publish_settings(
     config: Config<WorkerConfig>,
@@ -82,10 +82,16 @@ pub fn publish_settings(
 
     let body = Some(serde_json::to_vec(&DeployParamsExt {
         _base: &params.0,
-        githoney_payment_credential: &config.githoney_payment_cred,
-        githoney_script: &config.githoney_script_bytes,
-        githoney_staking_credential: &config.githoney_staking_cred,
         githoneyaddr: &config.githoney_addr,
+        githoney_payment_credential: &config.githoney_payment_cred,
+        githoney_staking_credential: &config.githoney_staking_cred,
+        githoney_script: &config.githoney_script_bytes,
+        script_version: &config.githoney_script_version,
+        script: &config.settings_address,
+        settings_minting_policy: &config.settings_policy_bytes,
+        settings_minting_version: &config.settings_policy_version,
+        settings_policy_id: &config.settings_policy_hash,
+        settings_token_name: &config.settings_token_name,
     })?);
 
     do_tx_building_request(protocol_url, body)

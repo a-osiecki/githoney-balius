@@ -305,17 +305,11 @@ tx deploy(
 ) {
 
     locals {
-        publish_cost: Ada(5000000),
+        publish_cost: Ada(50000000),
     }
 
     input one_shot_utxo {
-        from: GitHoneyAddr,
         ref: utxo_ref,
-    }
-
-    input* githoney_wallet {
-        from: GitHoneyAddr,
-        min_amount: publish_cost,
     }
 
     collateral {
@@ -353,7 +347,7 @@ tx deploy(
 
     output change {
         to: GitHoneyAddr,
-        amount: one_shot_utxo + githoney_wallet - fees - publish_cost,
+        amount: one_shot_utxo - fees - publish_cost,
     }
 
     cardano::plutus_witness {
