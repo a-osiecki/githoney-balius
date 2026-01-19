@@ -4,6 +4,7 @@ use url::Url;
 use crate::types::TxEnvelope;
 
 pub fn do_tx_building_request(url: Url, body: Option<Vec<u8>>) -> WorkerResult<Json<TxEnvelope>> {
+    println!("{:?}", body);
     let mut request = HttpRequest::post(url).header("Content-Type", "application/json");
     request.body = body;
 

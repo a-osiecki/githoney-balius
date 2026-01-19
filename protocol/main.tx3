@@ -634,17 +634,18 @@ tx createWithLovelace(
 // ADD REWARDS
 
 tx add(
-    bountyRef: UtxoRef,
+    bounty_ref: UtxoRef,
     minAda: Int,
-    rewardAmount: Int,
-    rewardAssetName: Bytes,
-    rewardPolicyId: Bytes,
-    settingsRef: UtxoRef,
+    reward_amount: Int,
+    reward_asset_name: Bytes,
+    reward_policy_id: Bytes,
+    settings_ref: UtxoRef,
+    initial_rewards: Int,
     since: Int,
     until: Int,
 ) {
     reference contract {
-        ref: settingsRef,
+        ref: settings_ref,
     }
 
     collateral {
@@ -654,18 +655,18 @@ tx add(
 
     input sponsor_input {
         from: Sponsor,
-        min_amount: min_utxo(sponsor_output) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount) + fees,
+        min_amount: min_utxo(sponsor_output) + AnyAsset(reward_policy_id, reward_asset_name, reward_amount) + fees,
     }
 
     input current {
-        ref: bountyRef,
+        ref: bounty_ref,
         datum_is: GithoneyDatum,
         redeemer: GithoneyContractRedeemers::AddRewards {},
     }
 
     output bounty_utxo {
         to: Script,
-        amount: current + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
+        amount: current + AnyAsset(reward_policy_id, reward_asset_name, reward_amount),
         datum: GithoneyDatum {
             admin_payment_credential: current.admin_payment_credential,
             maintainer_address: current.maintainer_address,
@@ -673,13 +674,17 @@ tx add(
             bounty_reward_fee: current.bounty_reward_fee,
             deadline: current.deadline,
             merged: current.merged,
-            initial_value: current.initial_value,
+            initial_value: {
+                "": {
+                    "": initial_rewards,
+                },
+            },
         },
     }
 
     output sponsor_output {
         to: Sponsor,
-        amount: sponsor_input - fees - AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
+        amount: sponsor_input - fees - AnyAsset(reward_policy_id, reward_asset_name, reward_amount),
     }
 
     validity {

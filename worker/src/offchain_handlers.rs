@@ -1,4 +1,5 @@
 use balius_sdk::{Config, Json, Params, WorkerResult};
+use balius_sdk::wit::balius::app as worker;
 
 use crate::{
     types::{TxEnvelope, WorkerConfig},
@@ -92,22 +93,22 @@ pub fn publish_settings(
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AddParams {
-    pub bountyref: String,
-    pub rewardamount: String,
-    pub settingsref: String,
+    pub bounty_ref: String,
+    pub initial_rewards: String,
+    pub reward_amount: String,
     pub since: String,
     pub sponsor: String,
     pub until: String,
 }
 
-#[derive(Serialize)]
+#[derive(Debug, Serialize)]
 pub struct AddParamsExt<'a> {
     #[serde(flatten)]
     _base: &'a AddParams,
     script: &'a String,
-    rewardassetname: &'a String,
-    rewardpolicyid: &'a String,
-    settingsref: &'a String,
+    reward_asset_name: &'a String,
+    reward_policy_id: &'a String,
+    settings_ref: &'a String,
 }
 
 pub fn add_funds(
@@ -116,15 +117,17 @@ pub fn add_funds(
 ) -> WorkerResult<Json<TxEnvelope>> {
     let protocol_url =
         url::Url::parse(&format!("{}/add-funds", &config.tx_builder_base_url)).unwrap();
-
-    let body = Some(serde_json::to_vec(&AddParamsExt {
+    let add_params = AddParamsExt {
         _base: &params.0,
         script: &config.githoney_script_address,
-        rewardassetname: &"".to_string(),
-        rewardpolicyid: &"".to_string(),
-        settingsref: &config.validator_ref,
-    })?);
+        reward_asset_name: &"".to_string(),
+        reward_policy_id: &"".to_string(),
+        settings_ref: &config.validator_ref,
+    };
 
+    let body = Some(serde_json::to_vec(&add_params)?);
+
+    worker::logging::log(worker::logging::Level::Info, "info", &format!("{:?}" , add_params));
     do_tx_building_request(protocol_url, body)
 }
 
