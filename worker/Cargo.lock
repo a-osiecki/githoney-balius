@@ -64,7 +64,7 @@ dependencies = [
  "pallas-addresses 0.32.1",
  "pallas-codec 0.32.1",
  "pallas-crypto 0.32.1",
- "pallas-primitives",
+ "pallas-primitives 0.32.1",
  "pallas-traverse",
  "prost",
  "serde",
@@ -413,6 +413,8 @@ dependencies = [
  "base64 0.22.1",
  "hex",
  "pallas-addresses 0.30.2",
+ "pallas-crypto 0.34.0",
+ "pallas-primitives 0.34.0",
  "serde",
  "serde_json",
  "url",
@@ -873,6 +875,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "pallas-codec"
+version = "0.34.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8a73eb2a9b424239230a45e66f61a60b123e1cf50ca6da9bd1049e17b2b579ca"
+dependencies = [
+ "hex",
+ "minicbor 0.25.1",
+ "serde",
+ "thiserror 1.0.69",
+]
+
+[[package]]
 name = "pallas-crypto"
 version = "0.30.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -902,6 +916,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "pallas-crypto"
+version = "0.34.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5f4c3dfc9286db9f1e54f35b2d8e7924dfdb17f480139ed2c113db6759578e48"
+dependencies = [
+ "cryptoxide",
+ "hex",
+ "pallas-codec 0.34.0",
+ "rand_core",
+ "serde",
+ "thiserror 1.0.69",
+ "zeroize",
+]
+
+[[package]]
 name = "pallas-primitives"
 version = "0.32.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -918,6 +947,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "pallas-primitives"
+version = "0.34.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b44e05db704a674d6a11a286d0ff8ac1fd22f4720b88b0deea5219ce46484d70"
+dependencies = [
+ "base58",
+ "bech32",
+ "hex",
+ "log",
+ "pallas-codec 0.34.0",
+ "pallas-crypto 0.34.0",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "pallas-traverse"
 version = "0.32.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -928,7 +973,7 @@ dependencies = [
  "pallas-addresses 0.32.1",
  "pallas-codec 0.32.1",
  "pallas-crypto 0.32.1",
- "pallas-primitives",
+ "pallas-primitives 0.32.1",
  "paste",
  "serde",
  "thiserror 1.0.69",
