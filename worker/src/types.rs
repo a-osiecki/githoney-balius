@@ -9,6 +9,7 @@ pub struct WorkerConfig {
     pub monitoring_address: String,
     pub tx_builder_base_url: String,
     // Githoney specific config
+    pub admin_address: String,
     pub admin_payment_cred: String,
     pub githoney_script_address: String,
     pub githoney_script_bytes: String,

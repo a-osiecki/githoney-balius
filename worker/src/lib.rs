@@ -10,7 +10,10 @@ use balius_sdk::{FnHandler, Worker};
 // use balius_sdk::wit::balius::app::driver::UtxoPattern;
 
 use crate::chainsync::get_latest_block;
-use crate::offchain_handlers::{add_funds, create_bounty, publish_settings};
+use crate::offchain_handlers::{
+    add_funds, close_assigned, close_assigned_sponsored, close_unassigned, close_unassigned_sponsored, create_bounty,
+    publish_settings,
+};
 use crate::signature::sign_payload;
 
 #[balius_sdk::main]
@@ -30,6 +33,16 @@ fn main() -> Worker {
         .with_request_handler("publish-settings", FnHandler::from(publish_settings))
         .with_request_handler("create-bounty", FnHandler::from(create_bounty))
         .with_request_handler("add-funds", FnHandler::from(add_funds))
+        .with_request_handler(
+            "close-unassigned",
+            FnHandler::from(close_unassigned),
+        )
+        .with_request_handler(
+            "close-unassigned-sponsored",
+            FnHandler::from(close_unassigned_sponsored),
+        )
+        .with_request_handler("close-assigned", FnHandler::from(close_assigned))
+        .with_request_handler("close-assigned-sponsored", FnHandler::from(close_assigned_sponsored))
     // .with_tx_handler(
     //     UtxoPattern {
     //         address: None,  // Monitor ALL transactions, filter manually in handler
