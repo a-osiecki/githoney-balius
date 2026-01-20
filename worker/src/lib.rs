@@ -11,8 +11,7 @@ use balius_sdk::{FnHandler, Worker};
 
 use crate::chainsync::get_latest_block;
 use crate::offchain_handlers::{
-    add_funds, close_before_contributor, close_before_contributor_with_reward, create_bounty,
-    publish_settings,
+    add_funds, close_after_contributor, close_before_contributor, close_before_contributor_with_reward, create_bounty, publish_settings
 };
 use crate::signature::sign_payload;
 
@@ -41,6 +40,7 @@ fn main() -> Worker {
             "close-before-contributor-with-reward",
             FnHandler::from(close_before_contributor_with_reward),
         )
+        .with_request_handler("close-after-contributor", FnHandler::from(close_after_contributor))
     // .with_tx_handler(
     //     UtxoPattern {
     //         address: None,  // Monitor ALL transactions, filter manually in handler

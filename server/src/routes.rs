@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use tx3_sdk::trp::{Error, TxEnvelope};
 
 use protocol::{
-    AddParams, Client, ClientOptions, CloseBeforeContributorParams,
+    AddParams, Client, ClientOptions, CloseAfterContributorParams, CloseBeforeContributorParams,
     CloseBeforeContributorWithRewardParams, CreateWithLovelaceParams, DeployParams,
 };
 
@@ -38,6 +38,7 @@ pub fn router() -> Router {
             "/close-before-contributor-with-reward",
             post(close_before_contributor_with_reward),
         )
+        .route("/close-after-contributor", post(close_after_contributor))
 }
 
 async fn handle_tx_result(
@@ -93,4 +94,12 @@ async fn close_before_contributor_with_reward(
     );
 
     handle_tx_result(PROTOCOL.close_before_contributor_with_reward_tx(req).await).await
+}
+
+async fn close_after_contributor(
+    Json(req): Json<CloseAfterContributorParams>,
+) -> Json<Result<TxEnvelope, String>> {
+    log::info!("Received close after contributor request: {:?}", req);
+
+    handle_tx_result(PROTOCOL.close_after_contributor_tx(req).await).await
 }
