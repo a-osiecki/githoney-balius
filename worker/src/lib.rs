@@ -11,7 +11,7 @@ use balius_sdk::{FnHandler, Worker};
 
 use crate::chainsync::get_latest_block;
 use crate::offchain_handlers::{
-    add_funds, close_assigned, close_assigned_sponsored, close_unassigned, close_unassigned_sponsored, create_bounty,
+    add_funds, assign_contributor, close_assigned, close_assigned_sponsored, close_unassigned, close_unassigned_sponsored, create_bounty,
     publish_settings,
 };
 use crate::signature::sign_payload;
@@ -33,6 +33,7 @@ fn main() -> Worker {
         .with_request_handler("publish-settings", FnHandler::from(publish_settings))
         .with_request_handler("create-bounty", FnHandler::from(create_bounty))
         .with_request_handler("add-funds", FnHandler::from(add_funds))
+        .with_request_handler("assign", FnHandler::from(assign_contributor))
         .with_request_handler(
             "close-unassigned",
             FnHandler::from(close_unassigned),

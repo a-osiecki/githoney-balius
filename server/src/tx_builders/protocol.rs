@@ -1,5 +1,5 @@
 pub use githoney::{
-    AddParams, Client, ClientOptions, CloseAssignedParams, CloseAssignedSponsoredParams,
+    AddParams, AssignParams, Client, ClientOptions, CloseAssignedParams, CloseAssignedSponsoredParams,
     CloseUnassignedParams, CloseUnassignedSponsoredParams, CreateWithLovelaceParams, DeployParams,
 };
 use once_cell::sync::Lazy;

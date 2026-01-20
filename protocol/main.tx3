@@ -687,74 +687,79 @@ tx add(
     }
 }
 
-// // ASSIGN CONTRIBUTOR
+// ASSIGN CONTRIBUTOR
 
-// tx assign(
-//     bountyRef: UtxoRef,
-//     contributorPaymentCredential: Bytes,
-//     contributorStakeCredential: Bytes,
-//     minAda: Int,
-//     settingsRef: UtxoRef,
-//     since: Int,
-//     until: Int,
-// ) {
-//     reference contract {
-//         ref: settingsRef,
-//     }
+tx assign(
+    bounty_ref: UtxoRef,
+    contributor_payment_credential: Bytes,
+    contributor_stake_credential: Bytes,
+    min_ada: Int,
+    initial_funds: Int,
+    settings_ref: UtxoRef,
+    since: Int,
+    until: Int,
+) {
+    reference contract {
+        ref: settings_ref,
+    }
 
-//     collateral {
-//         from: Contributor,
-//         min_amount: Ada(5000000),
-//     }
+    collateral {
+        from: Contributor,
+        min_amount: Ada(5000000),
+    }
 
-//     input contributor_input {
-//         from: Contributor,
-//         min_amount: min_utxo(contributor_output) + Ada(minAda) + fees,
-//     }
+    input contributor_input {
+        from: Contributor,
+        min_amount: min_utxo(contributor_output) + Ada(min_ada) + fees,
+    }
 
-//     input current {
-//         ref: bountyRef,
-//         datum_is: GithoneyDatum,
-//         redeemer: GithoneyContractRedeemers::Assign {},
-//     }
+    input current {
+        ref: bounty_ref,
+        datum_is: GithoneyDatum,
+        redeemer: GithoneyContractRedeemers::Assign {},
+    }
 
-//     output bounty_utxo {
-//         to: Script,
-//         amount: current + Ada(minAda), // 2 * minAda
-//         datum: GithoneyDatum {
-//             admin_payment_credential: current.admin_payment_credential,
-//             maintainer_address: current.maintainer_address,
-//             contributor_address: OptionAddress::Some {
-//                 address: CardanoAddress {
-//                     payment_credential: CardanoCredential::VerificationKey {
-//                         VerificationKey: contributorPaymentCredential,
-//                     },
-//                     staking_credential: OptionAddressCardanoCredential::Some {
-//                         stakeCredetial: StakeCredWrapper::Inline {
-//                             VerificationKey: CardanoCredential::VerificationKey {
-//                                 VerificationKey: contributorStakeCredential,
-//                             },
-//                         },
-//                     },
-//                 },
-//             },
-//             bounty_reward_fee: current.bounty_reward_fee,
-//             deadline: current.deadline,
-//             merged: current.merged,
-//             initial_value: current.initial_value,
-//         },
-//     }
+    output bounty_utxo {
+        to: Script,
+        amount: current + Ada(min_ada), // 2 * minAda
+        datum: GithoneyDatum {
+            admin_payment_credential: current.admin_payment_credential,
+            maintainer_address: current.maintainer_address,
+            contributor_address: OptionAddress::Some {
+                address: CardanoAddress {
+                    payment_credential: CardanoCredential::VerificationKey {
+                        VerificationKey: contributor_payment_credential,
+                    },
+                    staking_credential: OptionAddressCardanoCredential::Some {
+                        stakeCredetial: StakeCredWrapper::Inline {
+                            VerificationKey: CardanoCredential::VerificationKey {
+                                VerificationKey: contributor_stake_credential,
+                            },
+                        },
+                    },
+                },
+            },
+            bounty_reward_fee: current.bounty_reward_fee,
+            deadline: current.deadline,
+            merged: current.merged,
+            initial_value: {
+                "": {
+                    "": initial_funds,
+                },
+            },
+        },
+    }
 
-//     output contributor_output {
-//         to: Contributor,
-//         amount: contributor_input - fees - Ada(minAda),
-//     }
+    output contributor_output {
+        to: Contributor,
+        amount: contributor_input - fees - Ada(min_ada),
+    }
 
-//     validity {
-//         until_slot: until,
-//         since_slot: since,
-//     }
-// }
+    validity {
+        until_slot: until,
+        since_slot: since,
+    }
+}
 
 // CLOSE BOUNTY
 tx closeUnassigned(
