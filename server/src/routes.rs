@@ -41,12 +41,12 @@ async fn handle_tx_result(
 ) -> Json<Result<TxEnvelope, String>> {
     match tx_result {
         Ok(tx) => {
-            println!("Generated CBOR: {}", tx.tx);
+            log::info!("Generated CBOR: {}", tx.tx);
             let evaluated_tx_or_err = evaluate_tx::evaluate_tx(tx).await;
             Json(evaluated_tx_or_err)
         }
         Err(e) => {
-            println!("Error building transaction: {:?}", e);
+            log::error!("Error building transaction: {:?}", e);
             Json(Err(format!("Error building transaction: {:?}", e)))
         }
     }
@@ -55,19 +55,18 @@ async fn handle_tx_result(
 async fn create_bounty(
     Json(req): Json<CreateWithLovelaceParams>,
 ) -> Json<Result<TxEnvelope, String>> {
-    println!("Received create bounty request: {:?}", req);
+    log::info!("Received create bounty request: {:?}", req);
 
     handle_tx_result(PROTOCOL.create_with_lovelace_tx(req).await).await
 }
 
 async fn add_funds(Json(req): Json<AddParams>) -> Json<Result<TxEnvelope, String>> {
-    println!("Received add funds request: {:?}", req);
-
+    log::info!("Received add funds request: {:?}", req);
     handle_tx_result(PROTOCOL.add_tx(req).await).await
 }
 
 async fn deploy_settings(Json(req): Json<DeployParams>) -> Json<Result<TxEnvelope, String>> {
-    println!("Received deploy settings request: {:?}", req);
+    log::info!("Received deploy settings request: {:?}", req);
 
     handle_tx_result(PROTOCOL.deploy_tx(req).await).await
 }
@@ -75,7 +74,7 @@ async fn deploy_settings(Json(req): Json<DeployParams>) -> Json<Result<TxEnvelop
 async fn close_before_contributor(
     Json(req): Json<CloseBeforeContributorParams>,
 ) -> Json<Result<TxEnvelope, String>> {
-    println!("Received close before contributor request: {:?}", req);
+    log::info!("Received close before contributor request: {:?}", req);
 
     handle_tx_result(PROTOCOL.close_before_contributor_tx(req).await).await
 }

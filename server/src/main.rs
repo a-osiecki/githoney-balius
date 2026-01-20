@@ -1,20 +1,22 @@
 use axum::Router;
-use tokio::net::TcpListener;
 use dotenvy;
+use tokio::net::TcpListener;
 
-mod routes;
 mod evaluate_tx;
+mod routes;
 
 #[tokio::main]
 async fn main() {
     dotenvy::dotenv().ok();
     let app: Router = routes::router();
 
-    let listener = TcpListener::bind("127.0.0.1:8080")
-        .await
-        .unwrap();
+    let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
 
-    println!("Server listening on http://127.0.0.1:8080");
+    pretty_env_logger::formatted_builder()
+        .filter_level(log::LevelFilter::Info)
+        .init();
+
+    log::info!("Server listening on http://127.0.0.1:8080");
 
     axum::serve(listener, app).await.unwrap();
 }

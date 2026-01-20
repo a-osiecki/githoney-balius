@@ -33,14 +33,16 @@ pub async fn evaluate_tx(tx: TxEnvelope) -> Result<TxEnvelope, String> {
 
     match ogmios_evaluate(client, &evaluate_url, &ogmios_api_key, &tx.tx).await {
         Ok(response) => {
-            println!("Transaction evaluated successfully: {}", response);
-            if response.contains("Some of the scripts failed") {
+            if response.contains("Some of the scripts failed") || response.contains("Unauthorized")
+            {
+                log::error!("Error evaluating transaction: {}", response);
                 return Err(response);
             }
+            log::info!("Transaction evaluated successfully: {}", response);
             Ok(tx)
         }
         Err(e) => {
-            println!("Error evaluating transaction: {:?}", e);
+            log::error!("Error evaluating transaction: {:?}", e);
             Err(format!("Error evaluating transaction: {:?}", e))
         }
     }
