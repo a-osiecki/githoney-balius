@@ -142,7 +142,7 @@ pub fn add_funds(
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct CloseBeforeContributorParams {
+pub struct CloseUnassignedParams {
     pub bounty_id: String,
     pub bounty_ref: String,
     pub maintainer: String,
@@ -153,9 +153,9 @@ pub struct CloseBeforeContributorParams {
 }
 
 #[derive(Serialize)]
-pub struct CloseBeforeContributorParamsExt<'a> {
+pub struct CloseUnassignedParamsExt<'a> {
     #[serde(flatten)]
-    _base: &'a CloseBeforeContributorParams,
+    _base: &'a CloseUnassignedParams,
     script: &'a String,
     admin: &'a String,
     settings_ref: &'a String,
@@ -163,9 +163,9 @@ pub struct CloseBeforeContributorParamsExt<'a> {
     reward_policy_id: &'a String,
     minting_policy_id: &'a String,
 }
-pub fn close_before_contributor(
+pub fn close_unassigned(
     config: Config<WorkerConfig>,
-    params: Params<CloseBeforeContributorParams>,
+    params: Params<CloseUnassignedParams>,
 ) -> WorkerResult<Json<TxEnvelope>> {
     let protocol_url = url::Url::parse(&format!(
         "{}/close-before-contributor",
@@ -173,7 +173,7 @@ pub fn close_before_contributor(
     ))
     .unwrap();
 
-    let body = Some(serde_json::to_vec(&CloseBeforeContributorParamsExt {
+    let body = Some(serde_json::to_vec(&CloseUnassignedParamsExt {
         _base: &params.0,
         script: &config.githoney_script_address,
         admin: &config.admin_address,
@@ -187,7 +187,7 @@ pub fn close_before_contributor(
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct CloseBeforeContributorWithRewardParams {
+pub struct CloseUnassignedSponsoredParams {
     pub bounty_id: String,
     pub bounty_ref: String,
     pub maintainer: String,
@@ -200,9 +200,9 @@ pub struct CloseBeforeContributorWithRewardParams {
 }
 
 #[derive(Serialize)]
-pub struct CloseBeforeContributorWithRewardParamsExt<'a> {
+pub struct CloseUnassignedSponsoredParamsExt<'a> {
     #[serde(flatten)]
-    _base: &'a CloseBeforeContributorWithRewardParams,
+    _base: &'a CloseUnassignedSponsoredParams,
     admin: &'a String,
     minting_policy_id: &'a String,
     settings_ref: &'a String,
@@ -211,9 +211,9 @@ pub struct CloseBeforeContributorWithRewardParamsExt<'a> {
     refundings_asset_name: &'a String,
     refundings_policy_id: &'a String,
 }
-pub fn close_before_contributor_with_reward(
+pub fn close_unassigned_sponsored(
     config: Config<WorkerConfig>,
-    params: Params<CloseBeforeContributorWithRewardParams>,
+    params: Params<CloseUnassignedSponsoredParams>,
 ) -> WorkerResult<Json<TxEnvelope>> {
     let protocol_url = url::Url::parse(&format!(
         "{}/close-before-contributor-with-reward",
@@ -221,25 +221,22 @@ pub fn close_before_contributor_with_reward(
     ))
     .unwrap();
 
-    let body = Some(serde_json::to_vec(
-        &CloseBeforeContributorWithRewardParamsExt {
-            _base: &params.0,
-            admin: &config.admin_address,
-            settings_ref: &config.validator_ref,
-            reward_asset_name: &"".to_string(),
-            reward_policy_id: &"".to_string(),
-            refundings_asset_name: &"".to_string(),
-            refundings_policy_id: &"".to_string(),
-            minting_policy_id: &config.githoney_script_hash,
-        },
-    )?);
+    let body = Some(serde_json::to_vec(&CloseUnassignedSponsoredParamsExt {
+        _base: &params.0,
+        admin: &config.admin_address,
+        settings_ref: &config.validator_ref,
+        reward_asset_name: &"".to_string(),
+        reward_policy_id: &"".to_string(),
+        refundings_asset_name: &"".to_string(),
+        refundings_policy_id: &"".to_string(),
+        minting_policy_id: &config.githoney_script_hash,
+    })?);
 
     do_tx_building_request(protocol_url, body)
 }
 
-
 #[derive(Serialize, Deserialize)]
-pub struct CloseAfterContributorParams {
+pub struct CloseAssignedParams {
     pub bounty_id: String,
     pub bounty_ref: String,
     pub contributor: String,
@@ -251,18 +248,18 @@ pub struct CloseAfterContributorParams {
 }
 
 #[derive(Serialize)]
-pub struct CloseAfterContributorParamsExt<'a> {
+pub struct CloseAssignedParamsExt<'a> {
     #[serde(flatten)]
-    _base: &'a CloseAfterContributorParams,
+    _base: &'a CloseAssignedParams,
     admin: &'a String,
     minting_policy_id: &'a String,
     settings_ref: &'a String,
     reward_asset_name: &'a String,
     reward_policy_id: &'a String,
 }
-pub fn close_after_contributor(
+pub fn close_assigned(
     config: Config<WorkerConfig>,
-    params: Params<CloseAfterContributorParams>,
+    params: Params<CloseAssignedParams>,
 ) -> WorkerResult<Json<TxEnvelope>> {
     let protocol_url = url::Url::parse(&format!(
         "{}/close-after-contributor",
@@ -270,7 +267,7 @@ pub fn close_after_contributor(
     ))
     .unwrap();
 
-    let body = Some(serde_json::to_vec(&CloseAfterContributorParamsExt {
+    let body = Some(serde_json::to_vec(&CloseAssignedParamsExt {
         _base: &params.0,
         admin: &config.admin_address,
         settings_ref: &config.validator_ref,

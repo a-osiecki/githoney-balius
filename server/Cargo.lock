@@ -361,6 +361,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "githoney"
+version = "0.0.0"
+dependencies = [
+ "once_cell",
+ "serde",
+ "serde_json",
+ "tx3-sdk",
+]
+
+[[package]]
 name = "h2"
 version = "0.4.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -819,16 +829,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "535d180e0ecab6268a3e718bb9fd44db66bbbc256257165fc699dadf70d16fe7"
 dependencies = [
  "unicode-ident",
-]
-
-[[package]]
-name = "protocol"
-version = "0.0.0"
-dependencies = [
- "once_cell",
- "serde",
- "serde_json",
- "tx3-sdk",
 ]
 
 [[package]]
@@ -1579,10 +1579,10 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "dotenvy",
+ "githoney",
  "log",
  "once_cell",
  "pretty_env_logger",
- "protocol",
  "reqwest 0.13.1",
  "serde",
  "serde_json",
