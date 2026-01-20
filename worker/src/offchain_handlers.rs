@@ -141,6 +141,43 @@ pub fn add_funds(
     do_tx_building_request(protocol_url, body)
 }
 
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct AssignParams {
+    pub bounty_ref: String,
+    pub contributor: String,
+    pub contributor_payment_credential: String,
+    pub contributor_stake_credential: String,
+    pub min_ada: String,
+    pub initial_funds: String,
+    pub since: String,
+    pub until: String,
+}
+
+#[derive(Debug, Serialize)]
+pub struct AssignParamsExt<'a> {
+    #[serde(flatten)]
+    _base: &'a AssignParams,
+    script: &'a String,
+    settings_ref: &'a String,
+}
+
+pub fn assign_contributor(
+    config: Config<WorkerConfig>,
+    params: Params<AssignParams>,
+) -> WorkerResult<Json<TxEnvelope>> {
+    let protocol_url = url::Url::parse(&format!("{}/assign", &config.tx_builder_base_url)).unwrap();
+
+    let body = Some(serde_json::to_vec(&AssignParamsExt {
+        _base: &params.0,
+        script: &config.githoney_script_address,
+        settings_ref: &config.validator_ref,
+    })?);
+
+    do_tx_building_request(protocol_url, body)
+}
+
+
 #[derive(Serialize, Deserialize)]
 pub struct CloseUnassignedParams {
     pub bounty_id: String,
