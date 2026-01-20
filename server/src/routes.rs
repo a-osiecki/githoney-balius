@@ -4,8 +4,8 @@ use std::collections::HashMap;
 use tx3_sdk::trp::{Error, TxEnvelope};
 
 use protocol::{
-    AddParams, Client, ClientOptions, CloseBeforeContributorParams, CreateWithLovelaceParams,
-    DeployParams,
+    AddParams, Client, ClientOptions, CloseBeforeContributorParams,
+    CloseBeforeContributorWithRewardParams, CreateWithLovelaceParams, DeployParams,
 };
 
 use crate::evaluate_tx;
@@ -34,6 +34,10 @@ pub fn router() -> Router {
         .route("/create-bounty", post(create_bounty))
         .route("/add-funds", post(add_funds))
         .route("/close-before-contributor", post(close_before_contributor))
+        .route(
+            "/close-before-contributor-with-reward",
+            post(close_before_contributor_with_reward),
+        )
 }
 
 async fn handle_tx_result(
@@ -62,6 +66,7 @@ async fn create_bounty(
 
 async fn add_funds(Json(req): Json<AddParams>) -> Json<Result<TxEnvelope, String>> {
     log::info!("Received add funds request: {:?}", req);
+
     handle_tx_result(PROTOCOL.add_tx(req).await).await
 }
 
@@ -77,4 +82,15 @@ async fn close_before_contributor(
     log::info!("Received close before contributor request: {:?}", req);
 
     handle_tx_result(PROTOCOL.close_before_contributor_tx(req).await).await
+}
+
+async fn close_before_contributor_with_reward(
+    Json(req): Json<CloseBeforeContributorWithRewardParams>,
+) -> Json<Result<TxEnvelope, String>> {
+    log::info!(
+        "Received close before contributor with reward request: {:?}",
+        req
+    );
+
+    handle_tx_result(PROTOCOL.close_before_contributor_with_reward_tx(req).await).await
 }

@@ -162,7 +162,6 @@ pub struct CloseBeforeContributorParamsExt<'a> {
     reward_asset_name: &'a String,
     reward_policy_id: &'a String,
     minting_policy_id: &'a String,
-
 }
 pub fn close_before_contributor(
     config: Config<WorkerConfig>,
@@ -181,8 +180,61 @@ pub fn close_before_contributor(
         settings_ref: &config.validator_ref,
         reward_asset_name: &"".to_string(),
         reward_policy_id: &"".to_string(),
-        minting_policy_id: &config.githoney_script_hash
+        minting_policy_id: &config.githoney_script_hash,
     })?);
+
+    do_tx_building_request(protocol_url, body)
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct CloseBeforeContributorWithRewardParams {
+    pub bounty_id: String,
+    pub bounty_ref: String,
+    pub maintainer: String,
+    pub min_ada: String,
+    pub reward_amount: String,
+    pub sponsor: String,
+    pub refundings_amount: String,
+    pub since: String,
+    pub until: String,
+}
+
+#[derive(Serialize)]
+pub struct CloseBeforeContributorWithRewardParamsExt<'a> {
+    #[serde(flatten)]
+    _base: &'a CloseBeforeContributorWithRewardParams,
+    admin: &'a String,
+    minting_policy_id: &'a String,
+    // script: &'a String,
+    settings_ref: &'a String,
+    reward_asset_name: &'a String,
+    reward_policy_id: &'a String,
+    refundings_asset_name: &'a String,
+    refundings_policy_id: &'a String,
+}
+pub fn close_before_contributor_with_reward(
+    config: Config<WorkerConfig>,
+    params: Params<CloseBeforeContributorWithRewardParams>,
+) -> WorkerResult<Json<TxEnvelope>> {
+    let protocol_url = url::Url::parse(&format!(
+        "{}/close-before-contributor-with-reward",
+        &config.tx_builder_base_url
+    ))
+    .unwrap();
+
+    let body = Some(serde_json::to_vec(
+        &CloseBeforeContributorWithRewardParamsExt {
+            _base: &params.0,
+            // script: &config.githoney_script_address,
+            admin: &config.admin_address,
+            settings_ref: &config.validator_ref,
+            reward_asset_name: &"".to_string(),
+            reward_policy_id: &"".to_string(),
+            refundings_asset_name: &"".to_string(),
+            refundings_policy_id: &"".to_string(),
+            minting_policy_id: &config.githoney_script_hash,
+        },
+    )?);
 
     do_tx_building_request(protocol_url, body)
 }
