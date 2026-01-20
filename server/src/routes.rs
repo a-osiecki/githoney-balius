@@ -10,14 +10,11 @@ pub fn router() -> Router {
         .route("/deploy-settings", post(deploy_settings))
         .route("/create-bounty", post(create_bounty))
         .route("/add-funds", post(add_funds))
-        .route("/close-before-contributor", post(close_unassigned))
+        .route("/close-unassigned", post(close_unassigned))
         .route(
-            "/close-before-contributor-with-reward",
+            "/close-unassigned-sponsored",
             post(close_unassigned_sponsored),
         )
-        .route("/close-after-contributor", post(close_assigned))
-        .route(
-            "/close-after-contributor-with-reward",
-            post(close_assigned_sponsored),
-        )
+        .route("/close-assigned", post(close_assigned))
+        .route("/close-assigned-sponsored", post(close_assigned_sponsored))
 }
