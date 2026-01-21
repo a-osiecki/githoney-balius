@@ -12,6 +12,8 @@ url = "2.5"
 hex = "0.4"
 pallas-addresses = "0.30"
 base64 = "0.22"
+pallas-primitives = "0.34.0"
+pallas-crypto = "0.34.0"
 
 [lib]
 crate-type = ["cdylib"]
