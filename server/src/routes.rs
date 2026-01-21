@@ -2,7 +2,7 @@ use axum::{routing::post, Router};
 
 use crate::tx_builders::{
     add_funds, assign_contributor, close_assigned, close_assigned_sponsored, close_unassigned,
-    close_unassigned_sponsored, create_bounty, deploy_settings,
+    close_unassigned_sponsored, create_bounty, deploy_settings, merge
 };
 
 pub fn router() -> Router {
@@ -18,4 +18,5 @@ pub fn router() -> Router {
         )
         .route("/close-assigned", post(close_assigned))
         .route("/close-assigned-sponsored", post(close_assigned_sponsored))
+        .route("/merge", post(merge))
 }

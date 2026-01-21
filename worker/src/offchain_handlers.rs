@@ -359,3 +359,50 @@ pub fn close_assigned_sponsored(
 
     do_tx_building_request(protocol_url, body)
 }
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct MergeParams {
+    pub bounty_ref: String,
+    pub githoney_fee: String,
+    pub initial_funds: String,
+    pub maintainer: String,
+    pub min_ada: String,
+    pub since: String,
+    pub until: String,
+}
+
+#[derive(Debug, Serialize)]
+pub struct MergeParamsExt<'a> {
+    #[serde(flatten)]
+    _base: &'a MergeParams,
+    admin: &'a String,
+    githoneyaddr: &'a String,
+    reward_asset_name: &'a String,
+    reward_policy_id: &'a String,
+    script: &'a String,
+    settings_ref: &'a String,
+}
+
+pub fn merge(
+    config: Config<WorkerConfig>,
+    params: Params<MergeParams>
+) -> WorkerResult<Json<TxEnvelope>>{
+    let protocol_url = url::Url::parse(&format!(
+        "{}/merge",
+        &config.tx_builder_base_url
+    ))
+    .unwrap();
+    let merge_params = MergeParamsExt{
+        _base: &params.0,
+        admin: &config.admin_address,
+        githoneyaddr: &config.githoney_addr,
+        reward_asset_name: &"".to_string(),
+        reward_policy_id: &"".to_string(),
+        script: &config.githoney_script_address,
+        settings_ref: &config.validator_ref
+    };
+
+    let body = Some(serde_json::to_vec(&merge_params)?);
+
+    do_tx_building_request(protocol_url, body)
+}
