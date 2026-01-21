@@ -1100,49 +1100,49 @@ tx merge(
     }
 }
 
-// // CLAIM BOUNTY
+// CLAIM BOUNTY
 
-// tx claim(
-//     bountyId: Bytes,
-//     bountyRef: UtxoRef,
-//     minAda: Int,
-//     mintingPolicyId: Bytes,
-//     settingsRef: UtxoRef,
-//     since: Int,
-//     until: Int,
-// ) {
-//     reference contract {
-//         ref: settingsRef,
-//     }
+tx claim(
+    bounty_id: Bytes,
+    bounty_ref: UtxoRef,
+    min_ada: Int,
+    minting_policy_id: Bytes,
+    settings_ref: UtxoRef,
+    since: Int,
+    until: Int,
+) {
+    reference contract {
+        ref: settings_ref,
+    }
 
-//     collateral {
-//         from: Contributor,
-//         min_amount: Ada(5000000),
-//     }
+    collateral {
+        from: Contributor,
+        min_amount: Ada(5000000),
+    }
 
-//     input contributor_input {
-//         from: Contributor,
-//         min_amount: min_utxo(contributor_output) + fees,
-//     }
+    input contributor_input {
+        from: Contributor,
+        min_amount: min_utxo(contributor_output) + fees,
+    }
 
-//     input current {
-//         ref: bountyRef,
-//         datum_is: GithoneyDatum,
-//         redeemer: GithoneyContractRedeemers::Claim {},
-//     }
+    input current {
+        ref: bounty_ref,
+        datum_is: GithoneyDatum,
+        redeemer: GithoneyContractRedeemers::Claim {},
+    }
 
-//     mint {
-//         amount: AnyAsset(mintingPolicyId, bountyId, -1),
-//         redeemer: (),
-//     }
+    mint {
+        amount: AnyAsset(minting_policy_id, bounty_id, -1),
+        redeemer: (),
+    }
 
-//     output contributor_output {
-//         to: Contributor,
-//         amount: contributor_input + current - AnyAsset(mintingPolicyId, bountyId, 1) - fees,
-//     }
+    output contributor_output {
+        to: Contributor,
+        amount: contributor_input + current - AnyAsset(minting_policy_id, bounty_id, 1) - fees,
+    }
 
-//     validity {
-//         until_slot: until,
-//         since_slot: since,
-//     }
-// }
+    validity {
+        until_slot: until,
+        since_slot: since,
+    }
+}

@@ -406,3 +406,39 @@ pub fn merge(
 
     do_tx_building_request(protocol_url, body)
 }
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct ClaimParams {
+    pub bounty_id: String,
+    pub bounty_ref: String,
+    pub contributor: String,
+    pub since: String,
+    pub until: String,
+}
+
+#[derive(Serialize)]
+pub struct ClaimParamsExt<'a> {
+    #[serde(flatten)]
+    _base : &'a ClaimParams,
+    minting_policy_id: &'a String,
+    settings_ref: &'a String,
+}
+
+pub fn claim(
+    config: Config<WorkerConfig>,
+    params: Params<ClaimParams>
+) -> WorkerResult<Json<TxEnvelope>>{
+    let protocol_url = url::Url::parse(&format!(
+        "{}/claim",
+        &config.tx_builder_base_url
+    ))
+    .unwrap();
+
+    let body = Some(serde_json::to_vec(&ClaimParamsExt{
+        _base: &params.0,
+        minting_policy_id: &config.githoney_script_hash,
+        settings_ref: &config.validator_ref,
+    })?);
+
+    do_tx_building_request(protocol_url, body)
+}
