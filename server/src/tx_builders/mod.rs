@@ -2,6 +2,7 @@ mod add_funds;
 mod assign;
 mod close;
 mod create;
+mod merge;
 mod protocol;
 mod settings;
 mod utils;
@@ -12,4 +13,5 @@ pub use close::{
     close_assigned, close_assigned_sponsored, close_unassigned, close_unassigned_sponsored,
 };
 pub use create::create_bounty;
+pub use merge::merge;
 pub use settings::deploy_settings;

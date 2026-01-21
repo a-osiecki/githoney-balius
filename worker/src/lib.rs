@@ -12,7 +12,7 @@ use balius_sdk::{FnHandler, Worker};
 use crate::chainsync::get_latest_block;
 use crate::offchain_handlers::{
     add_funds, assign_contributor, close_assigned, close_assigned_sponsored, close_unassigned, close_unassigned_sponsored, create_bounty,
-    publish_settings,
+    publish_settings, merge
 };
 use crate::signature::sign_payload;
 
@@ -44,6 +44,7 @@ fn main() -> Worker {
         )
         .with_request_handler("close-assigned", FnHandler::from(close_assigned))
         .with_request_handler("close-assigned-sponsored", FnHandler::from(close_assigned_sponsored))
+        .with_request_handler("merge", FnHandler::from(merge))
     // .with_tx_handler(
     //     UtxoPattern {
     //         address: None,  // Monitor ALL transactions, filter manually in handler
