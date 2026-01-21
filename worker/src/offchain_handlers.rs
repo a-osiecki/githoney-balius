@@ -404,11 +404,5 @@ pub fn merge(
 
     let body = Some(serde_json::to_vec(&merge_params)?);
 
-    worker::logging::log(
-        worker::logging::Level::Info,
-        "info",
-        &format!("{:?}", merge_params),
-    );
-
     do_tx_building_request(protocol_url, body)
 }
