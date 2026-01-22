@@ -146,7 +146,7 @@ tx deployBadge(
     }
 
     metadata {
-        674: "Creating badges",
+        674: "Githoney: Deploy badges",
     }
 }
 
@@ -353,6 +353,10 @@ tx deploy(
     cardano::plutus_witness {
         version: settings_minting_version,
         script: settings_minting_policy,
+    }
+
+    metadata {
+        674: "Githoney: Deploy settings",
     }
 }
 
@@ -623,6 +627,10 @@ tx createWithLovelace(
         until_slot: until,
         since_slot: since,
     }
+
+    metadata{
+        674: "Githoney: Create bounty",
+    }
 }
 
 // ADD REWARDS
@@ -684,6 +692,10 @@ tx add(
     validity {
         until_slot: until,
         since_slot: since,
+    }
+
+    metadata {
+        674: "Githoney: Add funds",
     }
 }
 
@@ -759,6 +771,10 @@ tx assign(
         until_slot: until,
         since_slot: since,
     }
+
+    metadata {
+        674: "Githoney: Assign contributor",
+    }
 }
 
 // CLOSE BOUNTY
@@ -817,6 +833,10 @@ tx closeUnassigned(
 
     signers {
         Admin,
+    }
+
+    metadata {
+        674: "Githoney: Close unassigned bounty",
     }
 }
 
@@ -884,6 +904,10 @@ tx closeUnassignedSponsored(
     signers {
         Admin,
     }
+
+    metadata {
+        674: "Githoney: Close unassigned and sponsored bounty",
+    }
 }
 
 tx closeAssigned(
@@ -947,6 +971,10 @@ tx closeAssigned(
 
     signers {
         Admin,
+    }
+
+    metadata {
+        674: "Githoney: Close assigned bounty",
     }
 }
 
@@ -1018,6 +1046,10 @@ tx closeAssignedSponsored(
 
     signers {
         Admin,
+    }
+
+    metadata {
+        674: "Githoney: Close assigned and sponsored bounty",
     }
 }
 
@@ -1098,6 +1130,10 @@ tx merge(
     signers {
         Admin,
     }
+
+    metadata {
+        674: "Githoney: Merge bounty",
+    }
 }
 
 // CLAIM BOUNTY
@@ -1144,5 +1180,9 @@ tx claim(
     validity {
         until_slot: until,
         since_slot: since,
+    }
+
+    metadata {
+        674: "Githoney: claim bounty",
     }
 }
