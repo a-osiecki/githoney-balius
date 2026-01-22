@@ -21,5 +21,7 @@
   "settings_policy_hash": "62a2b23ee7465865ed9df516f0a2c030574fe25a7f226a7e88c72ae4",
   "settings_policy_version": "3",
   "settings_token_name": "73657474696e67734e4654",
-  "validator_ref": "9edc3087527514724b297475f84a8ab316faab1950ce1882715cf4bf88b20b64#0"
+  "validator_ref": "9edc3087527514724b297475f84a8ab316faab1950ce1882715cf4bf88b20b64#0",
+
+  "script_badge": "addr_test1wqvgz3zagrmt07yha86mhu5ctnlatn0q2y955vvc38vd09q358ej0"
 }

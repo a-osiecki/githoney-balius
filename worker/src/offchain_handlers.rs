@@ -442,3 +442,51 @@ pub fn claim(
 
     do_tx_building_request(protocol_url, body)
 }
+
+// Badges
+#[derive(Serialize, Deserialize)]
+pub struct DeployBadgeParams {
+    pub description: String,
+    pub description_value: String,
+    pub ft_badge_amount: String,
+    pub ft_badge_name: String,
+    pub ftaddress: String,
+    pub logo: String,
+    pub logo_value: String,
+    pub m_version: String,
+    pub name: String,
+    pub name_value: String,
+    pub utxo_ref: String,
+    pub policy_script: String,
+    pub policy_script_version: String,
+    pub minting_policy_id: String,
+}
+
+#[derive(Serialize)]
+pub struct DeployBadgeParamsExt<'a> {
+    #[serde(flatten)]
+    _base: &'a DeployBadgeParams,
+    githoneyaddr: &'a String,
+    ref_nft_asset_name: &'a String,
+    scriptbadge: &'a String,
+}
+
+pub fn deploy_badge(
+    config: Config<WorkerConfig>,
+    params: Params<DeployBadgeParams>
+) -> WorkerResult<Json<TxEnvelope>>{
+    let protocol_url = url::Url::parse(&format!(
+        "{}/deploy-badge",
+        &config.tx_builder_base_url
+    ))
+    .unwrap();
+
+    let body = Some(serde_json::to_vec(&DeployBadgeParamsExt{
+        _base: &params.0,
+        githoneyaddr: &config.githoney_addr,
+        ref_nft_asset_name: &config.settings_token_name,
+        scriptbadge: &config.script_badge
+    })?);
+
+    do_tx_building_request(protocol_url, body)
+}

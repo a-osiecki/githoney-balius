@@ -1,5 +1,6 @@
 mod add_funds;
 mod assign;
+mod badge;
 mod claim;
 mod close;
 mod create;
@@ -10,6 +11,7 @@ mod utils;
 
 pub use add_funds::add_funds;
 pub use assign::assign_contributor;
+pub use badge::deploy_badge;
 pub use claim::claim;
 pub use close::{
     close_assigned, close_assigned_sponsored, close_unassigned, close_unassigned_sponsored,
