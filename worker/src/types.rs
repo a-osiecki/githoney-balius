@@ -26,6 +26,8 @@ pub struct WorkerConfig {
     pub githoney_addr: String,
     pub githoney_payment_cred: String,
     pub githoney_staking_cred: String,
+    //Badges Config
+    pub script_badge: String,
 }
 
 ///// OFFCHAIN PROTOCOL TYPES /////

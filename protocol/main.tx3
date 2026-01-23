@@ -83,72 +83,72 @@ type BadgesDatum {
     version: Int,
 }
 
-// // BADGES
+// BADGES
 
-// // DEPLOY BADGE
+// MINT BADGE
 
-// tx deployBadge(
-//     description: Bytes,
-//     descriptionValue: Bytes,
-//     ftBadgeAmount: Int,
-//     ftBadgeName: Bytes,
-//     logo: Bytes,
-//     logoValue: Bytes,
-//     mVersion: Int,
-//     mintingPolicyId: Bytes,
-//     name: Bytes,
-//     nameValue: Bytes,
-//     policyScript: Bytes,
-//     policyScriptVersion: Int,
-//     refNftAssetName: Bytes,
-//     utxoRef: UtxoRef,
-// ) {
-//     collateral {
-//         from: GitHoneyAddr,
-//         min_amount: Ada(20000000),
-//     }
+tx mintBadge(
+    description: Bytes,
+    description_value: Bytes,
+    ft_badge_amount: Int,
+    ft_badge_name: Bytes,
+    logo: Bytes,
+    logo_value: Bytes,
+    m_version: Int,
+    minting_policy_id: Bytes,
+    name: Bytes,
+    name_value: Bytes,
+    badge_policy_script: Bytes,
+    badge_policy_script_version: Int,
+    ref_nft_asset_name: Bytes,
+    utxo_ref: UtxoRef,
+) {
+    collateral {
+        from: GitHoneyAddr,
+        min_amount: Ada(20000000),
+    }
 
-//     input githoney_wallet {
-//         ref: utxoRef,
-//     }
+    input githoney_wallet {
+        ref: utxo_ref,
+    }
 
-//     mint {
-//         amount: AnyAsset(mintingPolicyId, refNftAssetName, 1) + AnyAsset(mintingPolicyId, ftBadgeName, ftBadgeAmount),
-//         redeemer: (),
-//     }
+    mint {
+        amount: AnyAsset(minting_policy_id, ref_nft_asset_name, 1) + AnyAsset(minting_policy_id, ft_badge_name, ft_badge_amount),
+        redeemer: (),
+    }
 
-//     output badge_utxo {
-//         to: ScriptBadge,
-//         amount: min_utxo(badge_utxo) + AnyAsset(mintingPolicyId, refNftAssetName, 1),
-//         datum: BadgesDatum {
-//             metadata: {
-//                 name: nameValue,
-//                 logo: logoValue,
-//                 description: descriptionValue,
-//             },
-//             version: mVersion,
-//         },
-//     }
+    output badge_utxo {
+        to: ScriptBadge,
+        amount: min_utxo(badge_utxo) + AnyAsset(minting_policy_id, ref_nft_asset_name, 1),
+        datum: BadgesDatum {
+            metadata: {
+                name: name_value,
+                logo: logo_value,
+                description: description_value,
+            },
+            version: m_version,
+        },
+    }
 
-//     output ft_output {
-//         to: FTAddress,
-//         amount: AnyAsset(mintingPolicyId, ftBadgeName, ftBadgeAmount) + min_utxo(ft_output),
-//     }
+    output ft_output {
+        to: FTAddress,
+        amount: AnyAsset(minting_policy_id, ft_badge_name, ft_badge_amount) + min_utxo(ft_output),
+    }
 
-//     output change {
-//         to: GitHoneyAddr,
-//         amount: githoney_wallet - fees - min_utxo(ft_output) - min_utxo(badge_utxo),
-//     }
+    output change {
+        to: GitHoneyAddr,
+        amount: githoney_wallet - fees - min_utxo(ft_output) - min_utxo(badge_utxo),
+    }
 
-//     cardano::plutus_witness {
-//         version: policyScriptVersion,
-//         script: policyScript,
-//     }
+    cardano::plutus_witness {
+        version: badge_policy_script_version,
+        script: badge_policy_script,
+    }
 
-//     metadata {
-//         674: "Creating badges",
-//     }
-// }
+    metadata {
+        674: "Githoney: Mint badges",
+    }
+}
 
 // // UPDATE BADGE METADATA
 
@@ -353,6 +353,10 @@ tx deploy(
     cardano::plutus_witness {
         version: settings_minting_version,
         script: settings_minting_policy,
+    }
+
+    metadata {
+        674: "Githoney: Deploy settings",
     }
 }
 
@@ -623,6 +627,10 @@ tx createWithLovelace(
         until_slot: until,
         since_slot: since,
     }
+
+    metadata{
+        674: "Githoney: Create bounty",
+    }
 }
 
 // ADD REWARDS
@@ -684,6 +692,10 @@ tx add(
     validity {
         until_slot: until,
         since_slot: since,
+    }
+
+    metadata {
+        674: "Githoney: Add funds",
     }
 }
 
@@ -759,6 +771,10 @@ tx assign(
         until_slot: until,
         since_slot: since,
     }
+
+    metadata {
+        674: "Githoney: Assign contributor",
+    }
 }
 
 // CLOSE BOUNTY
@@ -817,6 +833,10 @@ tx closeUnassigned(
 
     signers {
         Admin,
+    }
+
+    metadata {
+        674: "Githoney: Close unassigned bounty",
     }
 }
 
@@ -884,6 +904,10 @@ tx closeUnassignedSponsored(
     signers {
         Admin,
     }
+
+    metadata {
+        674: "Githoney: Close unassigned and sponsored bounty",
+    }
 }
 
 tx closeAssigned(
@@ -947,6 +971,10 @@ tx closeAssigned(
 
     signers {
         Admin,
+    }
+
+    metadata {
+        674: "Githoney: Close assigned bounty",
     }
 }
 
@@ -1018,6 +1046,10 @@ tx closeAssignedSponsored(
 
     signers {
         Admin,
+    }
+
+    metadata {
+        674: "Githoney: Close assigned and sponsored bounty",
     }
 }
 
@@ -1098,6 +1130,10 @@ tx merge(
     signers {
         Admin,
     }
+
+    metadata {
+        674: "Githoney: Merge bounty",
+    }
 }
 
 // CLAIM BOUNTY
@@ -1144,5 +1180,9 @@ tx claim(
     validity {
         until_slot: until,
         since_slot: since,
+    }
+
+    metadata {
+        674: "Githoney: claim bounty",
     }
 }
