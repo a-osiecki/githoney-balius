@@ -85,9 +85,9 @@ type BadgesDatum {
 
 // BADGES
 
-// DEPLOY BADGE
+// MINT BADGE
 
-tx deployBadge(
+tx mintBadge(
     description: Bytes,
     description_value: Bytes,
     ft_badge_amount: Int,
@@ -98,8 +98,8 @@ tx deployBadge(
     minting_policy_id: Bytes,
     name: Bytes,
     name_value: Bytes,
-    policy_script: Bytes,
-    policy_script_version: Int,
+    badge_policy_script: Bytes,
+    badge_policy_script_version: Int,
     ref_nft_asset_name: Bytes,
     utxo_ref: UtxoRef,
 ) {
@@ -141,12 +141,12 @@ tx deployBadge(
     }
 
     cardano::plutus_witness {
-        version: policy_script_version,
-        script: policy_script,
+        version: badge_policy_script_version,
+        script: badge_policy_script,
     }
 
     metadata {
-        674: "Githoney: Deploy badges",
+        674: "Githoney: Mint badges",
     }
 }
 

@@ -444,8 +444,10 @@ pub fn claim(
 }
 
 // Badges
-#[derive(Serialize, Deserialize)]
-pub struct DeployBadgeParams {
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct MintBadgeParams {
+    pub badge_policy_script: String,
+    pub badge_policy_script_version: String,
     pub description: String,
     pub description_value: String,
     pub ft_badge_amount: String,
@@ -457,35 +459,33 @@ pub struct DeployBadgeParams {
     pub name: String,
     pub name_value: String,
     pub utxo_ref: String,
-    pub policy_script: String,
-    pub policy_script_version: String,
     pub minting_policy_id: String,
 }
 
 #[derive(Serialize)]
-pub struct DeployBadgeParamsExt<'a> {
+pub struct MintBadgeParamsExt<'a> {
     #[serde(flatten)]
-    _base: &'a DeployBadgeParams,
+    _base: &'a MintBadgeParams,
     githoneyaddr: &'a String,
     ref_nft_asset_name: &'a String,
     scriptbadge: &'a String,
 }
 
-pub fn deploy_badge(
+pub fn mint_badge(
     config: Config<WorkerConfig>,
-    params: Params<DeployBadgeParams>
+    params: Params<MintBadgeParams>
 ) -> WorkerResult<Json<TxEnvelope>>{
     let protocol_url = url::Url::parse(&format!(
-        "{}/deploy-badge",
+        "{}/mint-badges",
         &config.tx_builder_base_url
     ))
     .unwrap();
 
-    let body = Some(serde_json::to_vec(&DeployBadgeParamsExt{
+    let body = Some(serde_json::to_vec(&MintBadgeParamsExt{
         _base: &params.0,
         githoneyaddr: &config.githoney_addr,
         ref_nft_asset_name: &config.settings_token_name,
-        scriptbadge: &config.script_badge
+        scriptbadge: &config.script_badge,
     })?);
 
     do_tx_building_request(protocol_url, body)

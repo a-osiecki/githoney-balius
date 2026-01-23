@@ -1,6 +1,6 @@
 pub use githoney::{
     AddParams, AssignParams, Client, ClientOptions, CloseAssignedParams, CloseAssignedSponsoredParams,
-    CloseUnassignedParams, CloseUnassignedSponsoredParams, CreateWithLovelaceParams, DeployParams, DeployBadgeParams,MergeParams, ClaimParams
+    CloseUnassignedParams, CloseUnassignedSponsoredParams, CreateWithLovelaceParams, DeployParams, MintBadgeParams,MergeParams, ClaimParams
 };
 use once_cell::sync::Lazy;
 use std::collections::HashMap;
