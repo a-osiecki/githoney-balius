@@ -28,6 +28,8 @@ pub struct WorkerConfig {
     pub githoney_staking_cred: String,
     //Badges Config
     pub script_badge: String,
+    pub badges_script: String,
+    pub badges_script_version: String,
 }
 
 ///// OFFCHAIN PROTOCOL TYPES /////
