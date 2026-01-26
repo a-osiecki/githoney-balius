@@ -8,5 +8,5 @@ use crate::tx_builders::{
 pub async fn claim(Json(req): Json<ClaimParams>) -> TxHandlerResult {
     info!("Received claim bounty request: {:?}", req);
 
-    handle_tx_result(PROTOCOL.claim_tx(req).await).await
+    handle_tx_result(PROTOCOL.claim_tx(req).await, true).await
 }

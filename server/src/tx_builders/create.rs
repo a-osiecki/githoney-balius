@@ -10,5 +10,5 @@ pub async fn create_bounty(
 ) -> TxHandlerResult {
     log::info!("Received create bounty request: {:?}", req);
 
-    handle_tx_result(PROTOCOL.create_with_lovelace_tx(req).await).await
+    handle_tx_result(PROTOCOL.create_with_lovelace_tx(req).await, true).await
 }

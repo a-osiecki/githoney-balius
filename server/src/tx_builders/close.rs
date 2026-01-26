@@ -16,7 +16,7 @@ pub async fn close_unassigned(
 ) -> TxHandlerResult {
     log::info!("Received close before contributor request: {:?}", req);
 
-    handle_tx_result(PROTOCOL.close_unassigned_tx(req).await).await
+    handle_tx_result(PROTOCOL.close_unassigned_tx(req).await, true).await
 }
 
 pub async fn close_unassigned_sponsored(
@@ -27,7 +27,7 @@ pub async fn close_unassigned_sponsored(
         req
     );
 
-    handle_tx_result(PROTOCOL.close_unassigned_sponsored_tx(req).await).await
+    handle_tx_result(PROTOCOL.close_unassigned_sponsored_tx(req).await, true).await
 }
 
 pub async fn close_assigned(
@@ -35,7 +35,7 @@ pub async fn close_assigned(
 ) -> TxHandlerResult {
     log::info!("Received close after contributor request: {:?}", req);
 
-    handle_tx_result(PROTOCOL.close_assigned_tx(req).await).await
+    handle_tx_result(PROTOCOL.close_assigned_tx(req).await, true).await
 }
 
 pub async fn close_assigned_sponsored(
@@ -46,5 +46,5 @@ pub async fn close_assigned_sponsored(
         req
     );
 
-    handle_tx_result(PROTOCOL.close_assigned_sponsored_tx(req).await).await
+    handle_tx_result(PROTOCOL.close_assigned_sponsored_tx(req).await, true).await
 }

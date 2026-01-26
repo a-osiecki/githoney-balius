@@ -9,5 +9,5 @@ use crate::tx_builders::{
 pub async fn assign_contributor(Json(req): Json<AssignParams>) -> TxHandlerResult {
     info!("Received assign contributor request: {:?}", req);
 
-    handle_tx_result(PROTOCOL.assign_tx(req).await).await
+    handle_tx_result(PROTOCOL.assign_tx(req).await, true).await
 }

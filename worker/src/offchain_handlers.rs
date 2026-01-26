@@ -534,3 +534,26 @@ pub fn update_badge(
 
     do_tx_building_request(protocol_url, body)
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PayBadgesToParams {
+    pub badge_name: String,
+    pub badge_policy: String,
+    pub ftaddress: String,
+    pub payaddress: String,
+}
+
+pub fn pay_badges_to(
+    config: Config<WorkerConfig>,
+    params: Params<PayBadgesToParams>
+) -> WorkerResult<Json<TxEnvelope>>{
+    let protocol_url = url::Url::parse(&format!(
+        "{}/pay-badges-to",
+        &config.tx_builder_base_url
+    ))
+    .unwrap();
+
+    let body = Some(serde_json::to_vec(&params.0)?);
+
+    do_tx_building_request(protocol_url, body)
+}
