@@ -7,6 +7,7 @@ mod create;
 mod merge;
 mod protocol;
 mod settings;
+mod update_badge;
 mod utils;
 
 pub use add_funds::add_funds;
@@ -19,3 +20,4 @@ pub use close::{
 pub use create::create_bounty;
 pub use merge::merge;
 pub use settings::deploy_settings;
+pub use update_badge::update_badge;
