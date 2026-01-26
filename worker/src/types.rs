@@ -38,3 +38,8 @@ pub struct TxEnvelope {
     #[serde(rename = "tx")]
     pub tx: String,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ErrorResponse {
+    pub error: String,
+}
