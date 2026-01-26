@@ -1,13 +1,12 @@
 use axum::Json;
 use log::info;
-use tx3_sdk::trp::TxEnvelope;
 
 use crate::tx_builders::{
     protocol::{AssignParams, PROTOCOL},
-    utils::handle_tx_result,
+    utils::{handle_tx_result, TxHandlerResult},
 };
 
-pub async fn assign_contributor(Json(req): Json<AssignParams>) -> Json<Result<TxEnvelope, String>> {
+pub async fn assign_contributor(Json(req): Json<AssignParams>) -> TxHandlerResult {
     info!("Received assign contributor request: {:?}", req);
 
     handle_tx_result(PROTOCOL.assign_tx(req).await).await
