@@ -500,7 +500,7 @@ pub struct UpdateBadgeParams {
     pub m_version: String,
     pub name: String,
     pub name_value: String,
-    pub utxo_to_collect: String,
+    pub badge_utxo_ref: String,
 }
 
 #[derive(Serialize)]

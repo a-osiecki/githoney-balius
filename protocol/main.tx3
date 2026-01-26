@@ -163,8 +163,7 @@ tx updateBadge(
     name: Bytes,
     name_value: Bytes,
     settings_ref: UtxoRef,
-    // utxo_ref: UtxoRef,
-    utxo_to_collect: UtxoRef,
+    badge_utxo_ref: UtxoRef,
 ) {
     collateral {
         from: GitHoneyAddr,
@@ -181,7 +180,7 @@ tx updateBadge(
     }
 
     input current {
-        ref: utxo_to_collect,
+        ref: badge_utxo_ref,
         redeemer: (),
     }
 
