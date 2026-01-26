@@ -29,7 +29,7 @@ pub struct WebhookPayload {
 }
 
 // Helper function to send webhook notification
-pub fn send_confirmation_webhook(
+fn send_confirmation_webhook(
     webhook_url: &str,
     tx_hash: &str,
     block_hash: &str,

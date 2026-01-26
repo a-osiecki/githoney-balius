@@ -1,12 +1,10 @@
 use axum::Json;
-use tx3_sdk::trp::TxEnvelope;
-
 use crate::tx_builders::{
     protocol::{MintBadgeParams, PROTOCOL},
-    utils::handle_tx_result,
+    utils::{handle_tx_result, TxHandlerResult},
 };
 
-pub async fn mint_badge(Json(req): Json<MintBadgeParams>) -> Json<Result<TxEnvelope, String>> {
+pub async fn mint_badge(Json(req): Json<MintBadgeParams>) -> TxHandlerResult {
     log::info!("Received mint badge settings request: {:?}", req);
 
     handle_tx_result(PROTOCOL.mint_badge_tx(req).await).await
