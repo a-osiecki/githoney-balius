@@ -14,28 +14,11 @@ use tx3_sdk::trp::{Error, TxEnvelope};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct JsonRpcEvalTxResponse {
-    pub jsonrpc: JsonRpcVersion,
-    pub method: EvaluateTransactionMethod,
     pub result: Vec<EvalResultItem>,
-    pub id: serde_json::Value,
-}
-
-#[derive(Deserialize)]
-pub enum JsonRpcVersion {
-    #[serde(rename = "2.0")]
-    V2,
 }
 
 #[derive(Debug, Deserialize)]
-pub enum EvaluateTransactionMethod {
-    #[serde(rename = "evaluateTransaction")]
-    EvaluateTransaction,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct EvalResultItem {
     pub validator: RedeemerPointer,
 
