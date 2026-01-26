@@ -460,6 +460,7 @@ pub struct MintBadgeParams {
     pub name_value: String,
     pub utxo_ref: String,
     pub minting_policy_id: String,
+    pub ref_nft_asset_name: String,
 }
 
 #[derive(Serialize)]
@@ -467,7 +468,6 @@ pub struct MintBadgeParamsExt<'a> {
     #[serde(flatten)]
     _base: &'a MintBadgeParams,
     githoneyaddr: &'a String,
-    ref_nft_asset_name: &'a String,
     scriptbadge: &'a String,
 }
 
@@ -484,7 +484,6 @@ pub fn mint_badge(
     let body = Some(serde_json::to_vec(&MintBadgeParamsExt{
         _base: &params.0,
         githoneyaddr: &config.githoney_addr,
-        ref_nft_asset_name: &"dadb".to_string(),
         scriptbadge: &config.script_badge,
     })?);
 
