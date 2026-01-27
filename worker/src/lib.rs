@@ -7,11 +7,13 @@ mod utils;
 use balius_sdk::wit::balius::app as worker;
 use balius_sdk::{FnHandler, Worker};
 // use balius_sdk::wit::balius::app::submit;
-// use balius_sdk::wit::balius::app::driver::UtxoPattern;
+use balius_sdk::wit::balius::app::driver::UtxoPattern;
 
-use crate::chainsync::get_latest_block;
+use crate::chainsync::handle_transaction_event;
 use crate::offchain_handlers::{
-    add_funds, assign_contributor, claim, close_assigned, close_assigned_sponsored, close_unassigned, close_unassigned_sponsored, create_bounty, merge, mint_badge, publish_settings, update_badge, pay_badges_to
+    add_funds, assign_contributor, claim, close_assigned, close_assigned_sponsored,
+    close_unassigned, close_unassigned_sponsored, create_bounty, merge, mint_badge, pay_badges_to,
+    publish_settings, update_badge,
 };
 use crate::signature::sign_tx;
 
@@ -28,31 +30,30 @@ fn main() -> Worker {
     Worker::new()
         .with_signer("payment-key", "ed25519")
         .with_request_handler("sign-tx", FnHandler::from(sign_tx))
-        .with_request_handler("get-latest-block", FnHandler::from(get_latest_block))
-        .with_request_handler("publish-settings", FnHandler::from(publish_settings))
-        .with_request_handler("create-bounty", FnHandler::from(create_bounty))
-        .with_request_handler("add-funds", FnHandler::from(add_funds))
-        .with_request_handler("assign", FnHandler::from(assign_contributor))
-        .with_request_handler("close-unassigned", FnHandler::from(close_unassigned))
+        .with_request_handler("settings/deploy", FnHandler::from(publish_settings))
+        .with_request_handler("bounty/create", FnHandler::from(create_bounty))
+        .with_request_handler("bounty/add-funds", FnHandler::from(add_funds))
+        .with_request_handler("bounty/assign", FnHandler::from(assign_contributor))
+        .with_request_handler("bounty/close-unassigned", FnHandler::from(close_unassigned))
         .with_request_handler(
-            "close-unassigned-sponsored",
+            "bounty/close-unassigned-sponsored",
             FnHandler::from(close_unassigned_sponsored),
         )
-        .with_request_handler("close-assigned", FnHandler::from(close_assigned))
+        .with_request_handler("bounty/close-assigned", FnHandler::from(close_assigned))
         .with_request_handler(
-            "close-assigned-sponsored",
-            FnHandler::from(close_assigned_sponsored)
+            "bounty/close-assigned-sponsored",
+            FnHandler::from(close_assigned_sponsored),
         )
-        .with_request_handler("merge", FnHandler::from(merge))
-        .with_request_handler("claim", FnHandler::from(claim))
-        .with_request_handler("mint-badges", FnHandler::from(mint_badge))
-        .with_request_handler("update-badge", FnHandler::from(update_badge))
-        .with_request_handler("pay-badges-to", FnHandler::from(pay_badges_to))
-    // .with_tx_handler(
-    //     UtxoPattern {
-    //         address: None,  // Monitor ALL transactions, filter manually in handler
-    //         token: None,
-    //     },
-    //     FnHandler::from(handle_transaction_event),
-    // )
+        .with_request_handler("bounty/merge", FnHandler::from(merge))
+        .with_request_handler("bounty/claim", FnHandler::from(claim))
+        .with_request_handler("badge/mint", FnHandler::from(mint_badge))
+        .with_request_handler("badge/update", FnHandler::from(update_badge))
+        .with_request_handler("badge/pay", FnHandler::from(pay_badges_to))
+        .with_tx_handler(
+            UtxoPattern {
+                address: None, //Monitor ALL transactions, filter manually in handler
+                token: None,
+            },
+            FnHandler::from(handle_transaction_event),
+        )
 }

@@ -82,7 +82,6 @@ type BadgesDatum {
     metadata: Map<Bytes, Bytes>,
     version: Int,
 }
-
 // BADGES
 
 // MINT BADGE
