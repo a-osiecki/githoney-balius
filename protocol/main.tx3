@@ -82,29 +82,6 @@ type BadgesDatum {
     metadata: Map<Bytes, Bytes>,
     version: Int,
 }
-
-
-tx debug() {
-    input debug_input {
-        from: GitHoneyAddr,
-        min_amount: Ada(20000000),
-    }
-
-    output debug_output {
-        to: GitHoneyAddr,
-        amount: min_utxo(debug_output),
-        datum: {
-            "": {
-                "": 42,
-            },
-        },
-    }
-
-    output change {
-        to: GitHoneyAddr,
-        amount: debug_input - fees - min_utxo(debug_output),
-    }
-}
 // BADGES
 
 // MINT BADGE

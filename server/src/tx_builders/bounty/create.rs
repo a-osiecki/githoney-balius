@@ -2,7 +2,7 @@ use axum::Json;
 
 use crate::tx_builders::{
     protocol::{CreateWithLovelaceParams, PROTOCOL},
-    utils::{handle_tx_result, TxHandlerResult},
+    tx_result::{handle_tx_result, TxHandlerResult},
 };
 
 pub async fn create_bounty(

@@ -2,7 +2,7 @@ use axum::Json;
 use log::info;
 use crate::tx_builders::{
     protocol::{ClaimParams, PROTOCOL},
-    utils::{handle_tx_result, TxHandlerResult},
+    tx_result::{handle_tx_result, TxHandlerResult},
 };
 
 pub async fn claim(Json(req): Json<ClaimParams>) -> TxHandlerResult {

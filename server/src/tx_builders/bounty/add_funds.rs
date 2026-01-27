@@ -2,7 +2,7 @@ use axum::Json;
 
 use crate::tx_builders::{
     protocol::{AddParams, PROTOCOL},
-    utils::{handle_tx_result, TxHandlerResult},
+    tx_result::{handle_tx_result, TxHandlerResult},
 };
 
 pub async fn add_funds(Json(req): Json<AddParams>) -> TxHandlerResult {

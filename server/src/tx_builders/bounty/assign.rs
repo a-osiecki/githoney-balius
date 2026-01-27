@@ -3,7 +3,7 @@ use log::info;
 
 use crate::tx_builders::{
     protocol::{AssignParams, PROTOCOL},
-    utils::{handle_tx_result, TxHandlerResult},
+    tx_result::{handle_tx_result, TxHandlerResult},
 };
 
 pub async fn assign_contributor(Json(req): Json<AssignParams>) -> TxHandlerResult {

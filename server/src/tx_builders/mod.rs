@@ -1,21 +1,11 @@
-mod add_funds;
-mod assign;
 mod badge;
-mod claim;
-mod close;
-mod create;
-mod merge;
-mod protocol;
+mod bounty;
+mod common;
 mod settings;
-mod utils;
 
-pub use add_funds::add_funds;
-pub use assign::assign_contributor;
 pub use badge::{mint_badge, update_badge, pay_badges_to};
-pub use claim::claim;
-pub use close::{
-    close_assigned, close_assigned_sponsored, close_unassigned, close_unassigned_sponsored,
+pub use bounty::{
+    add_funds, assign_contributor, claim, close, create_bounty, merge,
 };
-pub use create::create_bounty;
-pub use merge::merge;
+pub use common::{eval, ogmios, protocol, script_data, tx_result};
 pub use settings::deploy_settings;

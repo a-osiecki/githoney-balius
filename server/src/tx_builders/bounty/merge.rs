@@ -1,7 +1,7 @@
 use axum::Json;
 use crate::tx_builders::{
     protocol::{MergeParams, PROTOCOL},
-    utils::{handle_tx_result, TxHandlerResult},
+    tx_result::{handle_tx_result, TxHandlerResult},
 };
 
 pub async fn merge(Json(req): Json<MergeParams>) -> TxHandlerResult {

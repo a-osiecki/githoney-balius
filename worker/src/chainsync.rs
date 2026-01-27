@@ -83,9 +83,10 @@ pub fn handle_transaction_event(config: Config<WorkerConfig>, tx_event: Tx) -> W
     let tx_hash = hex::encode(&tx_event.hash);
 
     // Decode monitoring address from config
-    let monitoring_addr_bytes = pallas_addresses::Address::from_bech32(&config.githoney_script_address)
-        .expect("Invalid bech32 monitoring address in config")
-        .to_vec();
+    let monitoring_addr_bytes =
+        pallas_addresses::Address::from_bech32(&config.githoney_script_address)
+            .expect("Invalid bech32 monitoring address in config")
+            .to_vec();
 
     // worker::logging::log(
     //     worker::logging::Level::Info,
