@@ -104,7 +104,7 @@ pub fn pay_badges_to(
     params: Params<PayBadgesToParams>,
 ) -> WorkerResult<Json<TxEnvelope>> {
     let protocol_url =
-        url::Url::parse(&format!("{}/pay-badges-to", &config.tx_builder_base_url)).unwrap();
+        url::Url::parse(&format!("{}/badge/pay", &config.tx_builder_base_url)).unwrap();
 
     let body = Some(serde_json::to_vec(&params.0)?);
 
@@ -131,7 +131,7 @@ pub fn collect_utxos(
     params: Params<CollectUtxosParams>
 ) -> WorkerResult<Json<TxEnvelope>>{
         let protocol_url = url::Url::parse(&format!(
-        "{}/collect-utxos",
+        "{}/badge/collect",
         &config.tx_builder_base_url
     ))
     .unwrap();
