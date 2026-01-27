@@ -19,8 +19,8 @@ impl<C> Encode<C> for LanguageViews {
         e: &mut minicbor::Encoder<W>,
         _ctx: &mut C,
     ) -> Result<(), minicbor::encode::Error<W::Error>> {
-        let entries = build_language_view_entries(&self.0)
-            .map_err(minicbor::encode::Error::message)?;
+        let entries =
+            build_language_view_entries(&self.0).map_err(minicbor::encode::Error::message)?;
 
         e.map(entries.len() as u64)?;
 
@@ -153,8 +153,7 @@ fn build_language_view_entries(
                 sub.end()
                     .map_err(|e| format!("encode v1 cost model array end: {e}"))?;
 
-                let key_bytes =
-                    minicbor::to_vec(0).map_err(|e| format!("encode v1 key: {e}"))?;
+                let key_bytes = minicbor::to_vec(0).map_err(|e| format!("encode v1 key: {e}"))?;
                 let key_sort =
                     minicbor::to_vec(&key_bytes).map_err(|e| format!("encode v1 key: {e}"))?;
 
@@ -186,9 +185,7 @@ fn build_language_view_entries(
     entries.sort_by(|a, b| {
         let a_len = a.key_sort.len();
         let b_len = b.key_sort.len();
-        a_len
-            .cmp(&b_len)
-            .then_with(|| a.key_sort.cmp(&b.key_sort))
+        a_len.cmp(&b_len).then_with(|| a.key_sort.cmp(&b.key_sort))
     });
 
     Ok(entries)

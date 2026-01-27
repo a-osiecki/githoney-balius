@@ -12,10 +12,18 @@ pub struct ErrorResponse {
 pub type TxHandlerResult = Result<Json<TxEnvelope>, (StatusCode, Json<ErrorResponse>)>;
 
 /// Handle the result of a tx building operation, evaluate it via Ogmios, and return the final tx or an error.
-pub async fn handle_tx_result(tx_result: Result<TxEnvelope, Error>) -> TxHandlerResult {
+pub async fn handle_tx_result(
+    tx_result: Result<TxEnvelope, Error>,
+    evaluate: bool,
+) -> TxHandlerResult {
     match tx_result {
         Ok(tx) => {
             log::info!("Generated tx: hash={}", tx.hash);
+
+            if !evaluate {
+                return Ok(Json(tx));
+            }
+
             match evaluate_tx(tx).await {
                 Ok(evaluated_tx) => Ok(Json(evaluated_tx)),
                 Err(e) => {

@@ -42,9 +42,7 @@ async fn update_ex_units(tx: TxEnvelope, str_json_rpc_resp: String) -> Result<Tx
     })
 }
 
-fn parse_eval_results(
-    str_json_rpc_resp: &str,
-) -> Result<Vec<ogmios::EvalResultItem>, String> {
+fn parse_eval_results(str_json_rpc_resp: &str) -> Result<Vec<ogmios::EvalResultItem>, String> {
     let parsed: ogmios::JsonRpcEvalTxResponse =
         serde_json::from_str(str_json_rpc_resp).map_err(|e| format!("bad json-rpc resp: {e}"))?;
     Ok(parsed.result)

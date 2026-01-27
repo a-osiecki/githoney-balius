@@ -112,13 +112,11 @@ async fn fetch_protocol_params() -> Result<ProtocolParams, Box<dyn std::error::E
         std::io::Error::new(std::io::ErrorKind::Other, format!("ogmios client: {e}"))
     })?;
 
-    let url = ogmios_endpoint().map_err(|e| {
-        std::io::Error::new(std::io::ErrorKind::InvalidInput, format!("{e}"))
-    })?;
+    let url = ogmios_endpoint()
+        .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidInput, format!("{e}")))?;
 
-    let ogmios_api_key = ogmios_api_key().map_err(|e| {
-        std::io::Error::new(std::io::ErrorKind::InvalidInput, format!("{e}"))
-    })?;
+    let ogmios_api_key = ogmios_api_key()
+        .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidInput, format!("{e}")))?;
 
     let body = serde_json::json!({
         "jsonrpc": "2.0",

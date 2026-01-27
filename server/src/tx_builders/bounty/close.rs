@@ -101,7 +101,8 @@ pub async fn close(Json(req): Json<CloseParams>) -> TxHandlerResult {
                 until,
             };
 
-            return handle_tx_result(PROTOCOL.close_assigned_sponsored_tx(params).await).await;
+            return handle_tx_result(PROTOCOL.close_assigned_sponsored_tx(params).await, true)
+                .await;
         }
 
         let params = CloseAssignedParams {
@@ -120,7 +121,7 @@ pub async fn close(Json(req): Json<CloseParams>) -> TxHandlerResult {
             until,
         };
 
-        return handle_tx_result(PROTOCOL.close_assigned_tx(params).await).await;
+        return handle_tx_result(PROTOCOL.close_assigned_tx(params).await, true).await;
     }
 
     // Unassigned close branch
@@ -161,7 +162,7 @@ pub async fn close(Json(req): Json<CloseParams>) -> TxHandlerResult {
             until,
         };
 
-        return handle_tx_result(PROTOCOL.close_unassigned_sponsored_tx(params).await).await;
+        return handle_tx_result(PROTOCOL.close_unassigned_sponsored_tx(params).await, true).await;
     }
 
     let params = CloseUnassignedParams {
@@ -179,7 +180,7 @@ pub async fn close(Json(req): Json<CloseParams>) -> TxHandlerResult {
         until,
     };
 
-    handle_tx_result(PROTOCOL.close_unassigned_tx(params).await).await
+    handle_tx_result(PROTOCOL.close_unassigned_tx(params).await, true).await
 }
 
 fn bad_request(message: impl Into<String>) -> TxHandlerResult {
