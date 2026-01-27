@@ -23,3 +23,4 @@ pub fn router() -> Router {
         .route("/update-badge", post(update_badge))
         .route("/pay-badges-to", post(pay_badges_to))
 }
+

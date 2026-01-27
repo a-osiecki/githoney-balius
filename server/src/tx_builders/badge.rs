@@ -1,8 +1,9 @@
-use axum::Json;
 use crate::tx_builders::{
     protocol::{MintBadgeParams, PROTOCOL, UpdateBadgeParams, PayBadgesToParams},
     utils::{handle_tx_result, TxHandlerResult},
 };
+use axum::Json;
+use githoney::DebugParams;
 
 pub async fn mint_badge(Json(req): Json<MintBadgeParams>) -> TxHandlerResult {
     log::info!("Received mint badge settings request: {:?}", req);

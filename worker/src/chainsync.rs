@@ -1,7 +1,7 @@
 use balius_sdk::wit::balius::app as worker;
 
 use balius_sdk::wit::balius::app::kv;
-use balius_sdk::{Ack, Config, Json, Params, Tx, WorkerResult};
+use balius_sdk::{Ack, Config, Tx, WorkerResult};
 use serde::{Deserialize, Serialize};
 
 use crate::types::WorkerConfig;
@@ -83,18 +83,18 @@ pub fn handle_transaction_event(config: Config<WorkerConfig>, tx_event: Tx) -> W
     let tx_hash = hex::encode(&tx_event.hash);
 
     // Decode monitoring address from config
-    let monitoring_addr_bytes = pallas_addresses::Address::from_bech32(&config.monitoring_address)
+    let monitoring_addr_bytes = pallas_addresses::Address::from_bech32(&config.githoney_script_address)
         .expect("Invalid bech32 monitoring address in config")
         .to_vec();
 
-    worker::logging::log(
-        worker::logging::Level::Info,
-        "tx_handler",
-        &format!(
-            "=== TX EVENT RECEIVED: {} (block: {}, slot: {}) ===",
-            tx_hash, tx_event.block_height, tx_event.block_slot
-        ),
-    );
+    // worker::logging::log(
+    //     worker::logging::Level::Info,
+    //     "tx_handler",
+    //     &format!(
+    //         "=== TX EVENT RECEIVED: {} (block: {}, slot: {}) ===",
+    //         tx_hash, tx_event.block_height, tx_event.block_slot
+    //     ),
+    // );
 
     // Manual filtering: Check if any input matches the monitoring address
     let has_monitored_address = tx_event
@@ -105,14 +105,14 @@ pub fn handle_transaction_event(config: Config<WorkerConfig>, tx_event: Tx) -> W
         .any(|output| output.address.to_vec() == monitoring_addr_bytes);
 
     if !has_monitored_address {
-        worker::logging::log(
-            worker::logging::Level::Debug,
-            "tx_handler",
-            &format!(
-                "Transaction does not involve monitoring address, skipping: {}",
-                tx_hash
-            ),
-        );
+        // worker::logging::log(
+        //     worker::logging::Level::Debug,
+        //     "tx_handler",
+        //     &format!(
+        //         "Transaction does not involve monitoring address, skipping: {}",
+        //         tx_hash
+        //     ),
+        // );
         return Ok(Ack);
     }
 
@@ -188,31 +188,4 @@ pub fn handle_transaction_event(config: Config<WorkerConfig>, tx_event: Tx) -> W
     }
 
     Ok(Ack)
-}
-
-pub fn get_latest_block(
-    config: Config<WorkerConfig>,
-    _params: Params<EmptyParams>,
-) -> WorkerResult<Json<BlockfrostResponse>> {
-    let project_id =
-        std::env::var("BLOCKFROST_PROJECT_ID").unwrap_or_else(|_| config.project_id.clone());
-
-    let url = url::Url::parse("https://cardano-preprod.blockfrost.io/api/v0/blocks/latest")
-        .map_err(|e| balius_sdk::Error::Internal(format!("Invalid URL: {}", e)))?;
-
-    let response = balius_sdk::http::HttpRequest::get(url)
-        .header("project_id", project_id.as_str())
-        .send()?;
-
-    if !response.is_ok() {
-        return Err(balius_sdk::Error::Internal(format!(
-            "HTTP error: status {}",
-            response.status
-        )));
-    }
-
-    let data: serde_json::Value = serde_json::from_slice(&response.body)
-        .map_err(|e| balius_sdk::Error::Internal(format!("Failed to parse JSON: {}", e)))?;
-
-    Ok(Json(BlockfrostResponse { data }))
 }
