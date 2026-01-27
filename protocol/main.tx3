@@ -217,32 +217,32 @@ tx updateBadge(
     }
 }
 
-// // PAY BADGES TO
+// PAY BADGES TO
 
-// tx payBadgesTo(
-//     badgeName: Bytes,
-//     badgePolicy: Bytes
-// ) {
-//     input badges {
-//         from: FTAddress,
-//         min_amount: AnyAsset(badgePolicy, badgeName, 1),
-//     }
+tx payBadgesTo(
+    badge_name: Bytes,
+    badge_policy: Bytes
+) {
+    input badges {
+        from: FTAddress,
+        min_amount: AnyAsset(badge_policy, badge_name, 1),
+    }
 
-//     input gas {
-//         from: FTAddress,
-//         min_amount: fees + min_utxo(payment) + min_utxo(change),
-//     }
+    input gas {
+        from: FTAddress,
+        min_amount: fees + min_utxo(payment) + min_utxo(change),
+    }
 
-//     output payment {
-//         to: PayAddress,
-//         amount: AnyAsset(badgePolicy, badgeName, 1) + min_utxo(payment),
-//     }
+    output payment {
+        to: PayAddress,
+        amount: AnyAsset(badge_policy, badge_name, 1) + min_utxo(payment),
+    }
 
-//     output change {
-//         to: FTAddress,
-//         amount: gas + badges - fees - min_utxo(payment) - AnyAsset(badgePolicy, badgeName, 1),
-//     }
-// }
+    output change {
+        to: FTAddress,
+        amount: gas + badges - fees - min_utxo(payment) - AnyAsset(badge_policy, badge_name, 1),
+    }
+}
 
 // // COLLECT UTXOS FROM BADGES
 
