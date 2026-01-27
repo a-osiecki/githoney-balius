@@ -11,7 +11,7 @@ mod utils;
 
 pub use add_funds::add_funds;
 pub use assign::assign_contributor;
-pub use badge::{mint_badge, update_badge, pay_badges_to};
+pub use badge::{mint_badge, update_badge, pay_badges_to, collect_utxos};
 pub use claim::claim;
 pub use close::{
     close_assigned, close_assigned_sponsored, close_unassigned, close_unassigned_sponsored,

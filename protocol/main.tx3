@@ -244,48 +244,47 @@ tx payBadgesTo(
     }
 }
 
-// // COLLECT UTXOS FROM BADGES
+// COLLECT UTXOS FROM BADGES
 
-// tx collectUtxos(
-//     badgesScript: Bytes,
-//     badgesScriptVersion: Int,
-//     settingsRef: UtxoRef,
-//     utxoRef: UtxoRef,
-//     utxoToCollect: UtxoRef,
-// ) {
-//     collateral {
-//         from: GitHoneyAddr,
-//         min_amount: Ada(5000000),
-//     }
+tx collectUtxos(
+    badges_script: Bytes,
+    badges_script_version: Int,
+    settings_ref: UtxoRef,
+    utxo_to_collect: UtxoRef,
+) {
+    collateral {
+        from: GitHoneyAddr,
+        min_amount: Ada(5000000),
+    }
 
-//     reference settings_utxo {
-//         ref: settingsRef,
-//     }
+    reference settings_utxo {
+        ref: settings_ref,
+    }
 
-//     input current {
-//         ref: utxoToCollect,
-//         redeemer: (),
-//     }
+    input current {
+        ref: utxo_to_collect,
+        redeemer: (),
+    }
 
-//     input githoney_wallet {
-//         from: GitHoneyAddr,
-//         min_amount: fees,
-//     }
+    input githoney_wallet {
+        from: GitHoneyAddr,
+        min_amount: fees,
+    }
 
-//     output change {
-//         to: GitHoneyAddr,
-//         amount: githoney_wallet + current - fees,
-//     }
+    output change {
+        to: GitHoneyAddr,
+        amount: githoney_wallet + current - fees,
+    }
 
-//     signers {
-//         GitHoneyAddr,
-//     }
+    signers {
+        GitHoneyAddr,
+    }
 
-//     cardano::plutus_witness {
-//         version: badgesScriptVersion,
-//         script: badgesScript,
-//     }
-// }
+    cardano::plutus_witness {
+        version: badges_script_version,
+        script: badges_script,
+    }
+}
 
 // SETTINGS
 // DEPLOY SETTINGS

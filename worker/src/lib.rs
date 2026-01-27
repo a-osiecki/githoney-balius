@@ -11,7 +11,7 @@ use balius_sdk::{FnHandler, Worker};
 
 use crate::chainsync::get_latest_block;
 use crate::offchain_handlers::{
-    add_funds, assign_contributor, claim, close_assigned, close_assigned_sponsored, close_unassigned, close_unassigned_sponsored, create_bounty, merge, mint_badge, publish_settings, update_badge, pay_badges_to
+    add_funds, assign_contributor, claim, close_assigned, close_assigned_sponsored, close_unassigned, close_unassigned_sponsored, collect_utxos, create_bounty, merge, mint_badge, pay_badges_to, publish_settings, update_badge
 };
 use crate::signature::sign_tx;
 
@@ -48,6 +48,7 @@ fn main() -> Worker {
         .with_request_handler("mint-badges", FnHandler::from(mint_badge))
         .with_request_handler("update-badge", FnHandler::from(update_badge))
         .with_request_handler("pay-badges-to", FnHandler::from(pay_badges_to))
+        .with_request_handler("collect-utxos", FnHandler::from(collect_utxos))
     // .with_tx_handler(
     //     UtxoPattern {
     //         address: None,  // Monitor ALL transactions, filter manually in handler
