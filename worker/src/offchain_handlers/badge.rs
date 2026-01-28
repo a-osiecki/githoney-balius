@@ -104,9 +104,45 @@ pub fn pay_badges_to(
     params: Params<PayBadgesToParams>,
 ) -> WorkerResult<Json<TxEnvelope>> {
     let protocol_url =
-        url::Url::parse(&format!("{}/pay-badges-to", &config.tx_builder_base_url)).unwrap();
+        url::Url::parse(&format!("{}/badge/pay", &config.tx_builder_base_url)).unwrap();
 
     let body = Some(serde_json::to_vec(&params.0)?);
+
+    do_tx_building_request(protocol_url, body)
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct CollectUtxosParams {
+    pub utxo_to_collect: String,
+}
+
+#[derive(Serialize)]
+pub struct CollectUtxosParamsExt<'a> {
+    #[serde(flatten)]
+    _params: &'a CollectUtxosParams,
+    badges_script: &'a String,
+    badges_script_version: &'a String,
+    githoneyaddr: &'a String,
+    settings_ref: &'a String,
+}
+
+pub fn collect_utxos(
+    config: Config<WorkerConfig>,
+    params: Params<CollectUtxosParams>
+) -> WorkerResult<Json<TxEnvelope>>{
+        let protocol_url = url::Url::parse(&format!(
+        "{}/badge/collect",
+        &config.tx_builder_base_url
+    ))
+    .unwrap();
+
+    let body = Some(serde_json::to_vec(&CollectUtxosParamsExt{
+        _params: &params.0,
+        badges_script: &config.badges_script,
+        badges_script_version: &config.badges_script_version,
+        githoneyaddr: &config.githoney_addr,
+        settings_ref: &config.validator_ref
+    })?);
 
     do_tx_building_request(protocol_url, body)
 }

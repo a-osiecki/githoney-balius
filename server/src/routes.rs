@@ -1,8 +1,7 @@
 use axum::{routing::post, Router};
 
 use crate::tx_builders::{
-    add_funds, assign_contributor, claim, close, create_bounty, deploy_settings, merge, mint_badge,
-    pay_badges_to, update_badge,
+    add_funds, assign_contributor, claim, close, collect_utxos, create_bounty, deploy_settings, merge, mint_badge, pay_badges_to, update_badge
 };
 
 pub fn router() -> Router {
@@ -16,5 +15,6 @@ pub fn router() -> Router {
         .route("/badge/mint", post(mint_badge))
         .route("/badge/update", post(update_badge))
         .route("/badge/pay", post(pay_badges_to))
+        .route("/badge/collect", post(collect_utxos))
         .route("/settings/deploy", post(deploy_settings))
 }

@@ -12,7 +12,7 @@ use balius_sdk::wit::balius::app::driver::UtxoPattern;
 use crate::chainsync::handle_transaction_event;
 use crate::offchain_handlers::{
     add_funds, assign_contributor, claim, close_assigned, close_assigned_sponsored,
-    close_unassigned, close_unassigned_sponsored, create_bounty, merge, mint_badge, pay_badges_to,
+    close_unassigned, close_unassigned_sponsored, collect_utxos, create_bounty, merge, mint_badge, pay_badges_to,
     publish_settings, update_badge,
 };
 use crate::signature::sign_tx;
@@ -46,6 +46,7 @@ fn main() -> Worker {
         )
         .with_request_handler("bounty/merge", FnHandler::from(merge))
         .with_request_handler("bounty/claim", FnHandler::from(claim))
+        .with_request_handler("badge/collect", FnHandler::from(collect_utxos))
         .with_request_handler("badge/mint", FnHandler::from(mint_badge))
         .with_request_handler("badge/update", FnHandler::from(update_badge))
         .with_request_handler("badge/pay", FnHandler::from(pay_badges_to))
