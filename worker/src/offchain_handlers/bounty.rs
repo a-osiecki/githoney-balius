@@ -88,11 +88,6 @@ pub fn add_funds(
 
     let body = Some(serde_json::to_vec(&add_params)?);
 
-    worker::logging::log(
-        worker::logging::Level::Info,
-        "info",
-        &format!("{:?}", add_params),
-    );
     do_tx_building_request(protocol_url, body)
 }
 
