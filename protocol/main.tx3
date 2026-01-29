@@ -471,80 +471,94 @@ tx deploy(
 // BOUNTIES
 // CREATE BOUNTY
 
-// tx createWithToken(
-//     adminPaymentCredential: CardanoCredential,
-//     // Since the settingsutxo datum cannot be accessed,
-//     // they are passed as parameters.
-//     bountyCreationFee: Int,
-//     bountyId: Bytes,
-//     bountyRewardFee: Int,
-//     manteinerAddress: CardanoAddress,
-//     minAda: Int,
-//     //NOTE - Since you cannot iterate over lists, we use a fixed asset.
-//     mintingPolicyId: Bytes,
-//     rewardAmount: Int,
-//     rewardAssetName: Bytes,
-//     rewardPolicyId: Bytes,
-//     settingsRef: UtxoRef,
-//     since: Int,
-//     timeLimit: Int,
-//     until: Int,
-// ) {
-//     reference contract {
-//         ref: settingsRef,
-//     }
+tx createWithToken(
+    admin_payment_key: Bytes,
+    // Since the settingsutxo datum cannot be accessed,
+    // they are passed as parameters.
+    bounty_creation_fee: Int,
+    bounty_id: Bytes,
+    bounty_rewards_fee: Int,
+    maintainer_payment_key: Bytes,
+    maintainer_stake_key: Bytes,
+    min_ada: Int,
+    //NOTE - Since you cannot iterate over lists, we use a fixed asset.
+    minting_policy_id: Bytes,
+    reward_amount: Int,
+    reward_asset_name: Bytes,
+    reward_policy_id: Bytes,
+    settings_ref: UtxoRef,
+    since: Int,
+    time_limit: Int,
+    until: Int,
+) {
+    reference contract {
+        ref: settings_ref,
+    }
 
-//     collateral {
-//         from: Maintainer,
-//         min_amount: Ada(5000000),
-//     }
+    collateral {
+        from: Maintainer,
+        min_amount: Ada(5000000),
+    }
 
-//     input maintainer_input {
-//         from: Maintainer,
-//         min_amount: min_utxo(bounty_utxo) + min_utxo(maintainer_output) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount) + Ada(bountyCreationFee) + fees,
-//     }
+    input maintainer_input {
+        from: Maintainer,
+        min_amount: min_utxo(bounty_utxo) + min_utxo(maintainer_output) + AnyAsset(reward_policy_id, reward_asset_name, reward_amount) + Ada(bounty_creation_fee) + fees,
+    }
 
-//     mint {
-//         amount: AnyAsset(mintingPolicyId, bountyId, 1),
-//         redeemer: (),
-//     }
+    mint {
+        amount: AnyAsset(minting_policy_id, bounty_id, 1),
+        redeemer: (),
+    }
 
-//     output bounty_utxo {
-//         to: Script,
-//         amount: Ada(minAda) + AnyAsset(mintingPolicyId, bountyId, 1) + AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount),
-//         datum: GithoneyDatum {
-//             admin_payment_credential: adminPaymentCredential,
-//             maintainer_address: manteinerAddress,
-//             contributor_address: OptionAddress::None {},
-//             bounty_reward_fee: bountyRewardFee,
-//             deadline: timeLimit,
-//             merged: false,
-//             initial_value: {
-//                 rewardPolicyId: {
-//                     rewardAssetName: rewardAmount,
-//                 },
-//                 "": {
-//                     "": minAda,
-//                 },
-//             },
-//         },
-//     }
+    output bounty_utxo {
+        to: Script,
+        amount: Ada(min_ada) + AnyAsset(minting_policy_id, bounty_id, 1) + AnyAsset(reward_policy_id, reward_asset_name, reward_amount),
+        datum: GithoneyDatum {
+            admin_payment_credential: CardanoCredential::VerificationKey {
+                VerificationKey: admin_payment_key,
+            },
+            maintainer_address:  CardanoAddress {
+                payment_credential: CardanoCredential::VerificationKey {
+                    VerificationKey: maintainer_payment_key,
+                },
+                staking_credential: OptionAddressCardanoCredential::Some {
+                    stakeCredetial: StakeCredWrapper::Inline {
+                        VerificationKey: CardanoCredential::VerificationKey {
+                            VerificationKey: maintainer_stake_key,
+                        },
+                    },
+                },
+            },
+            contributor_address: OptionAddress::None {},
+            bounty_reward_fee: bounty_rewards_fee,
+            deadline: time_limit,
+            merged: false,
+            initial_value: {
+                reward_policy_id: {
+                    reward_asset_name: reward_amount,
+                },
+                "": {
+                    "": min_ada,
+                },
+            },
+        },
+    }
 
-//     output githoney_wallet{
-//         to: GitHoneyAddr,
-//         amount: Ada(bountyCreationFee),
-//     }
+    output githoney_wallet{
+        to: GitHoneyAddr,
+        amount: Ada(bounty_creation_fee),
+    }
 
-//     output maintainer_output {
-//         to: Maintainer,
-//         amount: maintainer_input - Ada(bountyCreationFee) - fees - AnyAsset(rewardPolicyId, rewardAssetName, rewardAmount) - Ada(minAda),
-//     }
+    output maintainer_output {
+        to: Maintainer,
+        amount: maintainer_input - Ada(bounty_creation_fee) - fees - AnyAsset(reward_policy_id, reward_asset_name, reward_amount) - Ada(min_ada),
+    }
 
-//     validity {
-//         until_slot: until,
-//         since_slot: since,
-//     }
-// }
+    validity {
+        until_slot: until,
+        since_slot: since,
+    }
+}
 
 tx createWithLovelace(
     admin_payment_key: Bytes,
