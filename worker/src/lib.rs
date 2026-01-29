@@ -12,7 +12,7 @@ use balius_sdk::wit::balius::app::driver::UtxoPattern;
 use crate::chainsync::handle_transaction_event;
 use crate::offchain_handlers::{
     add_funds, assign_contributor, claim, close_assigned, close_assigned_sponsored,
-    close_unassigned, close_unassigned_sponsored, collect_utxos, create_bounty, merge, mint_badge, pay_badges_to,
+    close_unassigned, close_unassigned_sponsored, collect_utxos, create_bounty_with_lovelace, create_bounty_with_token, merge, mint_badge, pay_badges_to,
     publish_settings, update_badge,
 };
 use crate::signature::sign_tx;
@@ -31,7 +31,14 @@ fn main() -> Worker {
         .with_signer("payment-key", "ed25519")
         .with_request_handler("sign-tx", FnHandler::from(sign_tx))
         .with_request_handler("settings/deploy", FnHandler::from(publish_settings))
-        .with_request_handler("bounty/create", FnHandler::from(create_bounty))
+        .with_request_handler(
+            "bounty/create_with_lovelace",
+            FnHandler::from(create_bounty_with_lovelace)
+        )
+        .with_request_handler(
+            "bounty/create_with_token",
+            FnHandler::from(create_bounty_with_token)
+        )
         .with_request_handler("bounty/add-funds", FnHandler::from(add_funds))
         .with_request_handler("bounty/assign", FnHandler::from(assign_contributor))
         .with_request_handler("bounty/close-unassigned", FnHandler::from(close_unassigned))

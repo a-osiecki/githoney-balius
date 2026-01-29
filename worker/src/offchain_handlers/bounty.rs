@@ -1,4 +1,3 @@
-use balius_sdk::wit::balius::app as worker;
 use balius_sdk::{Config, Json, Params, WorkerResult};
 
 use crate::{
@@ -33,7 +32,7 @@ struct CreateWithLovelaceParamsExt<'a> {
     minting_policy_id: &'a String,
 }
 
-pub fn create_bounty(
+pub fn create_bounty_with_lovelace(
     config: Config<WorkerConfig>,
     params: Params<CreateWithLovelaceParams>,
 ) -> WorkerResult<Json<TxEnvelope>> {
@@ -41,6 +40,53 @@ pub fn create_bounty(
         url::Url::parse(&format!("{}/bounty/create", &config.tx_builder_base_url)).unwrap();
 
     let body = Some(serde_json::to_vec(&CreateWithLovelaceParamsExt {
+        _base: &params.0,
+        githoneyaddr: &config.githoney_addr,
+        script: &config.githoney_script_address,
+        admin_payment_key: &config.admin_payment_cred,
+        settings_ref: &config.validator_ref,
+        minting_policy_id: &config.githoney_script_hash,
+    })?);
+
+    do_tx_building_request(protocol_url, body)
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CreateWithTokenParams {
+    pub bounty_creation_fee: String,
+    pub bounty_id: String,
+    pub bounty_rewards_fee: String,
+    pub maintainer: String,
+    pub maintainer_payment_key: String,
+    pub maintainer_stake_key: String,
+    pub min_ada: String,
+    pub reward_amount: String,
+    pub reward_asset_name: String,
+    pub reward_policy_id: String,
+    pub since: String,
+    pub time_limit: String,
+    pub until: String,
+}
+
+#[derive(Serialize)]
+pub struct CreateWithTokenParamsExt<'a> {
+    #[serde(flatten)]
+    _base: &'a CreateWithTokenParams,
+    admin_payment_key: &'a String,
+    githoneyaddr: &'a String,
+    minting_policy_id: &'a String,
+    script: &'a String,
+    settings_ref: &'a String,
+}
+
+pub fn create_bounty_with_token(
+    config: Config<WorkerConfig>,
+    params: Params<CreateWithTokenParams>
+) -> WorkerResult<Json<TxEnvelope>>{
+    let protocol_url =
+        url::Url::parse(&format!("{}/bounty/create", &config.tx_builder_base_url)).unwrap();
+
+    let body = Some(serde_json::to_vec(&CreateWithTokenParamsExt {
         _base: &params.0,
         githoneyaddr: &config.githoney_addr,
         script: &config.githoney_script_address,
