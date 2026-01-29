@@ -2,7 +2,7 @@ pub use githoney::{
     AddParams, AssignParams, ClaimParams, Client, ClientOptions, CloseAssignedParams,
     CloseAssignedSponsoredParams, CloseUnassignedParams, CloseUnassignedSponsoredParams,
     CollectUtxosParams, CreateWithLovelaceParams, CreateWithTokenParams, DeployParams, MergeParams, MintBadgeParams,
-    PayBadgesToParams, UpdateBadgeParams,
+    PayBadgesToParams, UpdateBadgeParams, UpdateParams
 };
 use once_cell::sync::Lazy;
 use std::collections::HashMap;

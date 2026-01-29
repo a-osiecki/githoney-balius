@@ -52,3 +52,45 @@ pub fn publish_settings(
 
     do_tx_building_request(protocol_url, body)
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UpdateParams {
+    pub bounty_creation_fees: String,
+    pub bounty_rewards_fee: String,
+    pub githoney_payment_key: String,
+    pub githoney_staking_key: String,
+    pub githoneyaddr: String,
+
+}
+
+#[derive(Serialize)]
+pub struct UpdateParamsExt<'a> {
+    #[serde(flatten)]
+    _base: &'a UpdateParams,
+    githoney_script: &'a String,
+    settings_ref: &'a String,
+    script: &'a String,
+    script_version: &'a String,
+    settings_validator_script: &'a String,
+    settings_validator_version: &'a String,
+}
+
+pub fn update_settings(
+    config: Config<WorkerConfig>,
+    params: Params<UpdateParams>
+) -> WorkerResult<Json<TxEnvelope>>{
+    let protocol_url =
+        url::Url::parse(&format!("{}/settings/update", &config.tx_builder_base_url)).unwrap();
+
+    let body = Some(serde_json::to_vec(&UpdateParamsExt{
+        _base: &params.0,
+        githoney_script: &config.githoney_script_bytes,
+        settings_ref: &config.validator_ref,
+        script: &config.settings_address,
+        script_version: &config.githoney_script_version,
+        settings_validator_script: &config.settings_policy_bytes,
+        settings_validator_version: &config.settings_policy_version,
+    })?);
+
+    do_tx_building_request(protocol_url, body)
+}

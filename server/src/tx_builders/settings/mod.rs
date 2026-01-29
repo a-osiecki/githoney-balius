@@ -1,12 +1,5 @@
-use axum::Json;
+mod deploy;
+mod update;
 
-use crate::tx_builders::{
-    protocol::{DeployParams, PROTOCOL},
-    tx_result::{handle_tx_result, TxHandlerResult},
-};
-
-pub async fn deploy_settings(Json(req): Json<DeployParams>) -> TxHandlerResult {
-    log::info!("Received deploy settings request: {:?}", req);
-
-    handle_tx_result(PROTOCOL.deploy_tx(req).await, true).await
-}
+pub use deploy::deploy_settings;
+pub use update::update_settings;

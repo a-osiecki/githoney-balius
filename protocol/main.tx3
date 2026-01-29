@@ -358,59 +358,72 @@ tx deploy(
     }
 }
 
-// // UPDATE SETTINGS
+// UPDATE SETTINGS
 
-// tx update(
-//     bountyCreationFee: Int,
-//     bountyRewardFee: Int,
-//     githoneyScript: Bytes,
-//     scriptVersion: Int,
-//     settingsRef: UtxoRef,
-//     settingsValidatorScript: Bytes,
-//     settingsValidatorVersion: Int,
-// ) {
-//     collateral {
-//         from: GitHoneyAddr,
-//         min_amount: Ada(20000000),
-//     }
+tx update(
+    bounty_creation_fees: Int,
+    bounty_rewards_fee: Int,
+    githoney_payment_key: Bytes,
+    githoney_staking_key: Bytes,
+    githoney_script: Bytes,
+    script_version: Int,
+    settings_ref: UtxoRef,
+    settings_validator_script: Bytes,
+    settings_validator_version: Int,
+) {
+    collateral {
+        from: GitHoneyAddr,
+        min_amount: Ada(20000000),
+    }
 
-//     input current {
-//         ref: settingsRef,
-//         datum_is: SettingsDatum,
-//         redeemer: SettingsRedeemers::UpdateSettings {},
-//     }
+    input current {
+        ref: settings_ref,
+        datum_is: SettingsDatum,
+        redeemer: SettingsRedeemers::UpdateSettings {},
+    }
 
-//     input githoney_wallet {
-//         from: GitHoneyAddr,
-//         min_amount: min_utxo(change) + fees,
-//     }
+    input githoney_wallet {
+        from: GitHoneyAddr,
+        min_amount: min_utxo(change) + fees,
+    }
 
-//     cardano::publish settings_utxo {
-//         to: Script,
-//         amount: current,
-//         datum: SettingsDatum {
-//             githoney_address: current.githoney_address,
-//             bounty_creation_fee: bountyCreationFee,
-//             bounty_reward_fee: bountyRewardFee,
-//         },
-//         version: scriptVersion,
-//         script: githoneyScript,
-//     }
+    cardano::publish settings_utxo {
+        to: Script,
+        amount: current,
+        datum: SettingsDatum {
+            githoney_address: CardanoAddress {
+                payment_credential: CardanoCredential::VerificationKey {
+                    VerificationKey: githoney_payment_key,
+                },
+                staking_credential: OptionAddressCardanoCredential::Some {
+                    stakeCredetial: StakeCredWrapper::Inline {
+                        VerificationKey: CardanoCredential::VerificationKey {
+                            VerificationKey: githoney_staking_key,
+                        },
+                    },
+                },
+            },
+            bounty_creation_fee: bounty_creation_fees,
+            bounty_reward_fee: bounty_rewards_fee,
+        },
+        version: script_version,
+        script: githoney_script,
+    }
 
-//     output change {
-//         to: GitHoneyAddr,
-//         amount: githoney_wallet - fees,
-//     }
+    output change {
+        to: GitHoneyAddr,
+        amount: githoney_wallet - fees,
+    }
 
-//     signers {
-//         GitHoneyAddr,
-//     }
+    signers {
+        GitHoneyAddr,
+    }
 
-//     cardano::plutus_witness {
-//         version: settingsValidatorVersion,
-//         script: settingsValidatorScript,
-//     }
-// }
+    cardano::plutus_witness {
+        version: settings_validator_version,
+        script: settings_validator_script,
+    }
+}
 
 // // CLOSE SETTINGS
 

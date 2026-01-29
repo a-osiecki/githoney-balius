@@ -7,4 +7,4 @@ pub use bounty::{
     add_funds, assign_contributor, claim, close_assigned, close_assigned_sponsored,
     close_unassigned, close_unassigned_sponsored, create_bounty_with_lovelace, create_bounty_with_token, merge,
 };
-pub use settings::publish_settings;
+pub use settings::{publish_settings, update_settings};
