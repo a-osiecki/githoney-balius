@@ -110,7 +110,6 @@ pub async fn create_bounty(Json(req): Json<CreateParams>) -> TxHandlerResult {
         };
         return handle_tx_result(PROTOCOL.create_with_lovelace_tx(params).await, true).await;
     }
-//    handle_tx_result(PROTOCOL.create_with_lovelace_tx(req).await, true).await
 }
 
 fn bad_request(message: impl Into<String>) -> TxHandlerResult {
