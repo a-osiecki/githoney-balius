@@ -23,7 +23,8 @@ timeout = 30  # seconds
 
 # Key-Value store configuration
 [kv]
-type = "memory"  # or "redb" for persistent storage
+type = "redb"  # or "redb" for persistent storage
+path="kv"
 
 # Logger configuration (for worker logs)
 [logger]
@@ -38,7 +39,7 @@ type = "memory"
 worker = "githoney-worker"
 name = "payment-key"
 algorithm = "ed25519"
-private_key = "70d0db4d66d9f8f823482d1491252a67603e050a03c6cb57a3f47e14a2e381413029bae71e1e031220fc3bdd2763e90dc6d3ab67a55840666e8b36dd9e503dfa"
+private_key = "e0aea1c57ca3c9061d3b4fc50cfd09b09382d80876e6a265053d4fb63454bc420a67b5773126ab31529ef751a8901e4cf1c0f29d99de9442998586d352783ebf"
 
 
 # Submit transaction configuration via UTxORPC

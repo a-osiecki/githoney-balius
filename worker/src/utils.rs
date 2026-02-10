@@ -3,6 +3,10 @@ use url::Url;
 
 use crate::types::{ErrorResponse, TxEnvelope};
 
+// Transaction tracking status
+pub const TX_STATUS_PENDING: &str = "pending";
+pub const TX_STATUS_CONFIRMED: &str = "confirmed";
+
 pub fn do_tx_building_request(url: Url, body: Option<Vec<u8>>) -> WorkerResult<Json<TxEnvelope>> {
     println!("{:?}", body);
     let mut request = HttpRequest::post(url).header("Content-Type", "application/json");

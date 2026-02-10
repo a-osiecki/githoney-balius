@@ -4,8 +4,9 @@ mod signature;
 mod types;
 mod utils;
 
+use balius_sdk::wit::Config;
 use balius_sdk::wit::balius::app as worker;
-use balius_sdk::{FnHandler, Worker};
+use balius_sdk::{Error, FnHandler, Worker};
 // use balius_sdk::wit::balius::app::submit;
 use balius_sdk::wit::balius::app::driver::UtxoPattern;
 
@@ -15,10 +16,12 @@ use crate::offchain_handlers::{
     close_unassigned, close_unassigned_sponsored, collect_utxos, create_bounty_with_lovelace, create_bounty_with_token, merge, mint_badge, pay_badges_to,
     publish_settings, update_badge,
 };
-use crate::signature::sign_tx;
+use crate::signature::{_submit_tx, sign_tx};
 
 #[balius_sdk::main]
-fn main() -> Worker {
+fn main(_config: Config<WorkerConfig>) -> Worker {
+//     let exact_address = hex::decode(&"addr_test1wr5nj776ygd7d7vwcw3f9fknj4axx0wzy67y3qu8dqtscys7w9q65").map_err(|_| Error::BadParams).unwrap();
+
     balius_sdk::logging::init();
 
     worker::logging::log(
@@ -57,6 +60,7 @@ fn main() -> Worker {
         .with_request_handler("badge/mint", FnHandler::from(mint_badge))
         .with_request_handler("badge/update", FnHandler::from(update_badge))
         .with_request_handler("badge/pay", FnHandler::from(pay_badges_to))
+        .with_request_handler("submit", FnHandler::from(_submit_tx))
         .with_tx_handler(
             UtxoPattern {
                 address: None, //Monitor ALL transactions, filter manually in handler

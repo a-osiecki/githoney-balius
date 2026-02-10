@@ -5,10 +5,7 @@ use balius_sdk::{Ack, Config, Tx, WorkerResult};
 use serde::{Deserialize, Serialize};
 
 use crate::types::WorkerConfig;
-
-// Transaction tracking status
-const TX_STATUS_PENDING: &str = "pending";
-const TX_STATUS_CONFIRMED: &str = "confirmed";
+use crate::utils::{TX_STATUS_CONFIRMED, TX_STATUS_PENDING};
 
 #[derive(Serialize, Deserialize)]
 pub struct EmptyParams {}
@@ -88,14 +85,14 @@ pub fn handle_transaction_event(config: Config<WorkerConfig>, tx_event: Tx) -> W
             .expect("Invalid bech32 monitoring address in config")
             .to_vec();
 
-    // worker::logging::log(
-    //     worker::logging::Level::Info,
-    //     "tx_handler",
-    //     &format!(
-    //         "=== TX EVENT RECEIVED: {} (block: {}, slot: {}) ===",
-    //         tx_hash, tx_event.block_height, tx_event.block_slot
-    //     ),
-    // );
+    worker::logging::log(
+        worker::logging::Level::Info,
+        "tx_handler",
+        &format!(
+            "=== TX EVENT RECEIVED: {} (block: {}, slot: {}) ===",
+            tx_hash, tx_event.block_height, tx_event.block_slot
+        ),
+    );
 
     // Manual filtering: Check if any input matches the monitoring address
     let has_monitored_address = tx_event
@@ -106,14 +103,14 @@ pub fn handle_transaction_event(config: Config<WorkerConfig>, tx_event: Tx) -> W
         .any(|output| output.address.to_vec() == monitoring_addr_bytes);
 
     if !has_monitored_address {
-        // worker::logging::log(
-        //     worker::logging::Level::Debug,
-        //     "tx_handler",
-        //     &format!(
-        //         "Transaction does not involve monitoring address, skipping: {}",
-        //         tx_hash
-        //     ),
-        // );
+        worker::logging::log(
+            worker::logging::Level::Debug,
+            "tx_handler",
+            &format!(
+                "Transaction does not involve monitoring address, skipping: {}",
+                tx_hash
+            ),
+        );
         return Ok(Ack);
     }
 
